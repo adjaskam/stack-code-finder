@@ -1,0 +1,25 @@
+{
+  "name": "graph-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adjaskam/graph-node-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adjaskam/graph-node-app/issues"
+  },
+  "homepage": "https://github.com/adjaskam/graph-node-app#readme",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.1",
+    "hapi-pino": "^9.1.2",
+    "pino-pretty": "^7.5.1"
+  }
+}
