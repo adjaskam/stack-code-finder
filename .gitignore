@@ -22,9 +22,6 @@ coverage
 # API keys and secrets
 .env
 
-# Dependency directory
-node_modules
-bower_components
 
 # Editors
 .idea
@@ -39,3 +36,12 @@ dist/**/*
 
 # ignore yarn.lock
 yarn.lock
+
+# as its Typescript ignore all pure js files
+*.js
+!_*.js
+
+# builds
+node_modules
+bower_components
+build

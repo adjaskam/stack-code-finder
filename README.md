@@ -1,1 +1,2 @@
-# graph-node-app
+# node-app
+New node.js application
