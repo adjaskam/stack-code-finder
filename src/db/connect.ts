@@ -1,20 +1,26 @@
-import mongoose from "mongoose";
+import mongoose, { ConnectOptions } from "mongoose";
 import config from "config";
 import log from "../logger";
 
-function connect() {
-  const dbUri = config.get("dbUri") as string;
+var promiseRetry = require("promise-retry");
+const dbUri = config.get("dbUri") as string;
 
-  return mongoose
-    .connect(dbUri)
-    .then(() => {
-      log.info("Database connected");
-    })
-    .catch((error) => {
-      log.error("Db error", error);
-      console.log(error)
-      process.exit(1);
-    });
-}
+const options = {
+  useNewUrlParser: true,
+} as ConnectOptions;
+
+const promiseRetryOptions = {
+  retries: 60,
+  factor: 2,
+  minTimeout: 1000,
+  maxTimeout: 5000,
+};
+
+const connect = () => {
+  return promiseRetry((retry: any, number: Number) => {
+    log.info(`mongoose connecting to ${dbUri} - attempt: ${number}`);
+    return mongoose.connect(dbUri).catch(retry);
+  }, promiseRetryOptions);
+};
 
 export default connect;
