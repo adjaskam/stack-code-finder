@@ -18,7 +18,7 @@ const promiseRetryOptions = {
 
 const connect = () => {
   return promiseRetry((retry: any, number: Number) => {
-    log.info(`mongoose connecting to ${dbUri} - attempt: ${number}`);
+    log.info(`Mongo connecting to ${dbUri} - attempt: ${number}`);
     return mongoose.connect(dbUri).catch(retry);
   }, promiseRetryOptions);
 };

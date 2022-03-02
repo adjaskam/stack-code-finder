@@ -1,6 +1,6 @@
 FROM node:16-alpine
-WORKDIR /app
+WORKDIR /home/app
 COPY ["package.json",  "package-lock.json", "./"]
 RUN npm ci
 COPY . .
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

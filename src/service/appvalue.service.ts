@@ -10,3 +10,11 @@ export async function createAppValue(
     throw new Error(error);
   }
 }
+
+export async function findAllAppValues() {
+  try {
+    return await AppValue.find();
+  } catch (error) {
+    throw new Error(error);
+  }
+}
