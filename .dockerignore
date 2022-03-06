@@ -1,1 +1,3 @@
-README.md
+*.md
+README-secret.md
+!README*.md
