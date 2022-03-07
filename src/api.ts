@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import fetch from "node-fetch";
 
 // @todo for scrapping use -> https://www.npmjs.com/package/puppeteer

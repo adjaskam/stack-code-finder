@@ -1,5 +1,4 @@
 import { InternalQuestion } from "../controller/questionsController";
-import log from "../logger";
 
 type FetchedQuestion = {
   owner: {
