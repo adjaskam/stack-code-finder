@@ -6,14 +6,13 @@ import fetch from "node-fetch";
 // This is not considered a secret, and may be safely embed in client side code or distributed binaries.
 const STACK_API_KEY = "1)QIB80MJ1mCrDp0MtRRiA((";
 
-export async function fetchExampleDataFromStack(req: Request, res: Response) {
+export async function fetchExampleDataFromStack(tag: string) {
   try {
     const response = await fetch(
-      `https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&tagged=rust&site=stackoverflow&key=${STACK_API_KEY}`
+      `https://api.stackexchange.com/2.3/questions?tagged=${tag}&site=stackoverflow&key=${STACK_API_KEY}`
     );
-    const data = await response.json();
-    return res.send(data);
+    return response.json();
   } catch (error) {
-    res.status(409).send(error.message);
+    throw new Error(error.message);
   }
 }

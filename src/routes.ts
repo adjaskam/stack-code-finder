@@ -1,9 +1,14 @@
-import { Express, Request, Response } from "express";
-import { createAppValueHandler, findAllAppValuesHandler } from "./controller/appvalue.controller";
-import { fetchExampleDataFromStack } from "./api"
+import { Express } from "express";
+import {
+  fetchQuestionsHandler,
+  getAllQuestionsHandler,
+  getAllQuestionsForTagHandler,
+} from "./controller/questionsController";
+import { fetchExampleDataFromStack } from "./api";
 
 export default function (app: Express) {
   app.get("/healthcheck", fetchExampleDataFromStack);
-  app.post("/api/appvalue", createAppValueHandler);
-  app.get("/api/appvalue", findAllAppValuesHandler);
+  app.post("/api/questions", fetchQuestionsHandler);
+  app.get("/api/questions/:tag", getAllQuestionsForTagHandler);
+  app.get("/api/questions", getAllQuestionsHandler);
 }
