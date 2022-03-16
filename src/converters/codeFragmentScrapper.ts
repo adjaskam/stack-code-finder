@@ -17,10 +17,10 @@ export async function scrapCodeFragment(url: string) {
   await page.waitForXPath("//pre[contains(@class, 's-code-block')]");
 
   const getXPath = await page.$x("//pre[contains(@class, 's-code-block')]");
-  const elements = [];
-  for (const xpath of getXPath) {
-    const codeBlock = await page.evaluate(name => name.innerText, xpath);
-    elements.push(codeBlock);
-  }
+  const elements = await Promise.all(
+    getXPath.map((xpath) => {
+      return page.evaluate((name) => name.innerText, xpath);
+    })
+  );
   return elements;
 }
