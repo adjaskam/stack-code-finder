@@ -108,7 +108,8 @@ export async function deleteQuestionByQuestionIdHandler(req: Request, res: Respo
 
 export async function getCodeFragmentHandler(req: Request, res: Response) {
   try {
-    return res.status(200).send(await scrapCodeFragment("cos"));
+    const result = await scrapCodeFragment("cos");
+    return res.status(200).send(result);
   } catch (error) {
     res.status(409).send(error.message);
   }
