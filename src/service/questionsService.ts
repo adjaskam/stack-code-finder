@@ -6,7 +6,8 @@ import log from "../logger";
 // we should prevent storing Question duplicates -> findOneAndUpdate with upsert set to "true"
 export async function createQuestion(
   input: InternalQuestion,
-  tag: String
+  tag: string,
+  codeFragment: string[]
 ): Promise<DocumentDefinition<QuestionDocument> | null> {
   try {
     return await Question.create({
@@ -14,6 +15,7 @@ export async function createQuestion(
       link: input.link,
       title: input.title,
       tag: tag,
+      codeFragment: codeFragment
     });
   } catch (error) {
     log.error(error.message);

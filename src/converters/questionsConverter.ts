@@ -1,18 +1,9 @@
 import { InternalQuestion } from "../controller/questionsController";
-
-type FetchedQuestion = {
-  owner: {
-    account_id: string;
-  };
-  question_id: string;
-  link: string;
-  title: string;
-};
+import { FetchedQuestion } from "../controller/questionsController";
 
 export function convertQuestionsToInfoInternalFormat(
   questions: FetchedQuestion[]
 ): InternalQuestion[] | undefined {
-  // log.info(`Questions array: ${JSON.stringify(questions, null, "  ")}`);
   if (Array.isArray(questions) && questions.length > 0) {
     return questions.map((item) => ({
       questionId: item.question_id,
