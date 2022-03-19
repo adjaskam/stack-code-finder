@@ -1,4 +1,4 @@
-class FetchQuestionError extends Error {
+class FetchCodeFragmentError extends Error {
   private errorCode: number;
   constructor(message: string, errorCode: number) {
     super(message);
@@ -10,4 +10,4 @@ class FetchQuestionError extends Error {
   }
 }
 
-export default FetchQuestionError;
+export default FetchCodeFragmentError;

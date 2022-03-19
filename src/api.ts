@@ -1,28 +1,22 @@
 import fetch from "node-fetch";
-import { TaggedCodeFragment } from "./controller/questionsController";
+import log from "./logger";
 
 // This is not considered a secret, and may be safely embed in client side code or distributed binaries.
 const STACK_API_KEY = "1)QIB80MJ1mCrDp0MtRRiA((";
 
-export async function fetchExampleDataFromStack(
-  tag: string,
-  amount: number,
-  page: number
-) {
+export async function fetchExampleDataFromStack(tag: string, page: number) {
   const params = [
     `tagged=${tag}`,
-    `pagesize=${amount}`,
     "site=stackoverflow",
     `key=${STACK_API_KEY}`,
-    `page=${page}`
+    `page=${page}`,
   ];
 
+  const url = `https://api.stackexchange.com/2.3/questions?${params.join("&")}`;
   try {
-    const response = await fetch(
-      `https://api.stackexchange.com/2.3/questions?${params.join("&")}`
-    );
-    console.log("URL:",
-      `https://api.stackexchange.com/2.3/questions?${params.join("&")}`)
+    const response = await fetch(url);
+    log.info(`Page: ${page}`);
+    log.info(`Response received: ${url}`);
     return response.json();
   } catch (error) {
     throw new Error(error.message);

@@ -1,17 +1,14 @@
 import { Express } from "express";
 import {
-  fetchQuestionsHandler,
-  getAllQuestionsHandler,
-  getAllQuestionsForTagHandler,
-  deleteAllQuestionsHandler,
-  deleteQuestionByQuestionIdHandler,
-} from "./controller/questionsController";
-import { fetchExampleDataFromStack } from "./api";
+  fetchCodeFragmentsHandler,
+  getAllCodeFragmentsBySearchPhraseHandler,
+  getAllCodeFragmentsHandler,
+  deleteAllCodeFragmentsHandler,
+} from "./controller/codeFragmentController";
 
 export default function (app: Express) {
-  app.post("/api/questions", fetchQuestionsHandler);
-  app.get("/api/questions/:tag", getAllQuestionsForTagHandler);
-  app.get("/api/questions", getAllQuestionsHandler);
-  app.delete("/api/questions", deleteAllQuestionsHandler);
-  app.delete("/api/questions/:questionId", deleteQuestionByQuestionIdHandler);
+  app.post("/api/codefragments", fetchCodeFragmentsHandler);
+  app.get("/api/codefragments/:searchPhrase", getAllCodeFragmentsBySearchPhraseHandler);
+  app.get("/api/codefragments", getAllCodeFragmentsHandler);
+  app.delete("/api/codefragments", deleteAllCodeFragmentsHandler);
 }
