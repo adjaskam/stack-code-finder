@@ -78,7 +78,6 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
             for (const index in results) {
               const codeBlock = results[index];
               const codeBlockHash = hash.MD5(`${item.questionId}.${codeBlock}`);
-
               log.info(`PROCESSED_CODE_BLOCK: ${codeBlock}`);
               log.info(`PROCESSED_CODE_BLOCK_MD5: ${codeBlockHash}`);
               log.info(
@@ -100,11 +99,7 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
               if (managedCodeFragment) {
                 managedCodeFragments.push(managedCodeFragment);
               }
-
               log.info(`MANAGED_CODE_BLOCK_CONTENT: ${managedCodeFragment}`);
-
-              log.info(`COUNTER: ${managedCodeFragments.length}`);
-              log.info(`AMOUNT: ${taggedFragmentDto.getAmount()}`);
 
               if (
                 managedCodeFragments.length == taggedFragmentDto.getAmount()
