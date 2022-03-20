@@ -2,78 +2,46 @@ import { Request, Response } from "express";
 import { createCodeFragment } from "../service/codeFragmentService";
 import { fetchExampleDataFromStack } from "../api";
 import CodeFragment, { CodeFragmentDocument } from "../model/codeFragmentModel";
-import { DocumentDefinition } from "mongoose";
 import log from "../logger";
 import { scrapCodeFragment } from "../converters/codeFragmentScrapper";
 import config from "config";
 import FetchCodeFragmentError from "../exception/FetchCodeFragmentError";
 import { getCodeBlocksContainsPhrase } from "../converters/questionsConverter";
 import hash from "object-hash";
-
-export type TaggedCodeFragment = {
-  tag: string;
-  searchPhrase: string;
-  amount: number;
-};
-
-export type CodeFragmentsListDto = {
-  items: DocumentDefinition<CodeFragmentDocument>[];
-  count: number;
-};
-
-export type InternalQuestion = {
-  questionId: string;
-  title: string;
-  link: string;
-};
-
-export type CodeFragment = {
-  questionId: String;
-  tag: String;
-  searchPhrase: String;
-  codeFragment: String;
-  hashMessage: String;
-};
-
-type FetchedQuestion = {
-  owner: {
-    account_id: string;
-  };
-  question_id: string;
-  link: string;
-  title: string;
-};
-
-type StackApiResponse = Response & {
-  items?: FetchedQuestion[];
-};
+import { FetchedQuestion } from "./types";
+import { DocumentDefinition } from "mongoose";
+import { TaggedFragmentDto } from "../dto/TaggedFragmentDto";
+import { CodeFragmentsListDto } from "../dto/CodeFragmentsListDto";
+import { validationResult } from "express-validator";
 
 const codeFragmentsFetchLimit = config.get("codeFragmentsFetchLimit") as number;
 
-export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
-  try {
-    const taggedFragmentDto: TaggedCodeFragment = {
-      tag: req.body.tag,
-      searchPhrase: req.body.searchPhrase,
-      amount: req.body.amount,
-    };
-    console.log("TaggedFragmentDto", taggedFragmentDto);
+let page = 0;
 
-    const page = 0;
-    if (taggedFragmentDto.amount > codeFragmentsFetchLimit) {
+export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
+  const errors = validationResult(req).array();
+  try {
+    if (errors && errors.length) {
+      return res.status(400).json({ errors });
+    }
+
+    const taggedFragmentDto = new TaggedFragmentDto(
+      req.body.tag,
+      req.body.searchPhrase,
+      req.body.amount
+    );
+
+    if (taggedFragmentDto.getAmount() > codeFragmentsFetchLimit) {
       throw new FetchCodeFragmentError(
-        "The limit of 10 code fragments has been exceeded",
+        `LIMIT_OF_${codeFragmentsFetchLimit}_CODE_FRAGMENTS_EXCEEDED`,
         400
       );
     }
-
     // fetch until the limit is reached
     const managedCodeFragments: DocumentDefinition<CodeFragmentDocument>[] = [];
     do {
-      // const amountToFetch = taggedFragmentDto.amount - updatedArray.length;
-      let newPage = page + 1;
       const fetchedQuestions: { items: FetchedQuestion[] } =
-        await fetchExampleDataFromStack(taggedFragmentDto.tag, newPage);
+        await fetchExampleDataFromStack(taggedFragmentDto.getTag(), ++page);
 
       let mappedQuestions;
       if (
@@ -99,19 +67,22 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
           } catch (error) {
             log.error(error.message);
           }
+
           if (scrappedCodeFragment?.length > 0) {
             const results = getCodeBlocksContainsPhrase(
               scrappedCodeFragment,
-              taggedFragmentDto.searchPhrase
+              taggedFragmentDto.getSearchPhrase()
             );
-            log.info(`Result length: ${results.length}`);
+            log.info(`RESULT_LENGTH: ${results.length}`);
+
             for (const index in results) {
               const codeBlock = results[index];
               const codeBlockHash = hash.MD5(`${item.questionId}.${codeBlock}`);
-              log.info(`Processed code block: ${codeBlock}`);
-              log.info(`Processed code block MD5 hash: ${codeBlockHash}`);
+
+              log.info(`PROCESSED_CODE_BLOCK: ${codeBlock}`);
+              log.info(`PROCESSED_CODE_BLOCK_MD5: ${codeBlockHash}`);
               log.info(
-                `MD5 hash already exists: ${existingHashes.includes(
+                `MD5_ALREADY_USED_VALUE: ${existingHashes.includes(
                   codeBlockHash
                 )}`
               );
@@ -120,8 +91,8 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
 
               const managedCodeFragment = await createCodeFragment({
                 questionId: item.questionId,
-                tag: taggedFragmentDto.tag,
-                searchPhrase: taggedFragmentDto.searchPhrase,
+                tag: taggedFragmentDto.getTag(),
+                searchPhrase: taggedFragmentDto.getSearchPhrase(),
                 codeFragment: codeBlock,
                 hashMessage: codeBlockHash,
               });
@@ -129,24 +100,29 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
               if (managedCodeFragment) {
                 managedCodeFragments.push(managedCodeFragment);
               }
-              log.info(`Managed code block: ${managedCodeFragment}`);
 
-              if (managedCodeFragments.length === taggedFragmentDto.amount) {
-                const codeFragmentsListDto: CodeFragmentsListDto = {
-                  items: managedCodeFragments,
-                  count: managedCodeFragments.length,
-                };
+              log.info(`MANAGED_CODE_BLOCK_CONTENT: ${managedCodeFragment}`);
+
+              log.info(`COUNTER: ${managedCodeFragments.length}`);
+              log.info(`AMOUNT: ${taggedFragmentDto.getAmount()}`);
+
+              if (
+                managedCodeFragments.length == taggedFragmentDto.getAmount()
+              ) {
+                const codeFragmentsListDto = new CodeFragmentsListDto(
+                  managedCodeFragments,
+                  managedCodeFragments.length
+                );
                 return res.send(codeFragmentsListDto);
               }
             }
           }
         }
       }
-    } while (managedCodeFragments.length < taggedFragmentDto.amount);
+    } while (managedCodeFragments.length < taggedFragmentDto.getAmount());
   } catch (error) {
     if (error instanceof FetchCodeFragmentError) {
-      const code = error.getErrorCode();
-      return res.status(code).send(error.message);
+      return res.status(error.getErrorCode()).send(error.message);
     }
     res.status(409).send(error.message);
   }
@@ -155,10 +131,10 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
 export async function getAllCodeFragmentsHandler(req: Request, res: Response) {
   try {
     const codeFragments = await CodeFragment.find();
-    const codeFragmentsListDto: CodeFragmentsListDto = {
-      items: codeFragments,
-      count: codeFragments.length,
-    };
+    const codeFragmentsListDto = new CodeFragmentsListDto(
+      codeFragments,
+      codeFragments.length
+    );
     return res.status(200).send(codeFragmentsListDto);
   } catch (error) {
     return res.status(409).send(error.message);
@@ -170,14 +146,13 @@ export async function getAllCodeFragmentsBySearchPhraseHandler(
   res: Response
 ) {
   try {
-    log.info(`req.params.searchPhrase: ${req.params.searchPhrase}`);
     const codeFragments = await CodeFragment.find({
       searchPhrase: req.params.searchPhrase,
     });
-    const codeFragmentsListDto: CodeFragmentsListDto = {
-      items: codeFragments,
-      count: codeFragments.length,
-    };
+    const codeFragmentsListDto = new CodeFragmentsListDto(
+      codeFragments,
+      codeFragments.length
+    );
     return res.status(200).send(codeFragmentsListDto);
   } catch (error) {
     res.status(409).send(error.message);
@@ -195,17 +170,3 @@ export async function deleteAllCodeFragmentsHandler(
     res.status(409).send(error.message);
   }
 }
-
-// export async function deleteQuestionByQuestionIdHandler(
-//   req: Request,
-//   res: Response
-// ) {
-//   try {
-//     const question = await Question.deleteOne({
-//       questionId: req.params.questionId,
-//     });
-//     return res.status(200).send(question);
-//   } catch (error) {
-//     res.status(409).send(error.message);
-//   }
-// }

@@ -15,8 +15,7 @@ export async function fetchExampleDataFromStack(tag: string, page: number) {
   const url = `https://api.stackexchange.com/2.3/questions?${params.join("&")}`;
   try {
     const response = await fetch(url);
-    log.info(`Page: ${page}`);
-    log.info(`Response received: ${url}`);
+    log.info(`RESPONSE_RECEIVED FROM: ${url}`);
     return response.json();
   } catch (error) {
     throw new Error(error.message);

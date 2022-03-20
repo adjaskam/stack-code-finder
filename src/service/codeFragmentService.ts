@@ -1,7 +1,7 @@
 import { DocumentDefinition } from "mongoose";
 import Question, { CodeFragmentDocument } from "../model/codeFragmentModel";
 import log from "../logger";
-import { CodeFragment } from "../controller/codeFragmentController";
+import { CodeFragment } from "../controller/types";
 
 export async function createCodeFragment(
   codeFragment: CodeFragment

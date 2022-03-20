@@ -1,6 +1,7 @@
-import { final } from "pino";
 import puppeteer from "puppeteer";
-import log from "../logger";
+import ScrapCodeFragmentError from "../exception/ScrapCodeFragmentError";
+
+const SEARCH_XPATH = "//pre[contains(@class, 's-code-block')]" as string;
 
 export async function scrapCodeFragment(url: string): Promise<string[]> {
   const browser = await puppeteer.launch({
@@ -12,10 +13,10 @@ export async function scrapCodeFragment(url: string): Promise<string[]> {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(4000);
     await page.goto(url);
-    // await page.waitForXPath("//pre[contains(@class, 's-code-block')]", {
-    //   timeout: 4000,
-    // });
-    const getXPath = await page.$x("//pre[contains(@class, 's-code-block')]");
+    await page.waitForXPath(SEARCH_XPATH, {
+      timeout: 4500,
+    });
+    const getXPath = await page.$x(SEARCH_XPATH);
     const elements = await Promise.all(
       getXPath.map((xpath) => {
         return page.evaluate((name) => name.innerText, xpath);
@@ -23,7 +24,10 @@ export async function scrapCodeFragment(url: string): Promise<string[]> {
     );
     return elements;
   } catch (error) {
-    throw new Error("PUPPETEER_PROCESSING_ERROR")
+    throw new ScrapCodeFragmentError(
+      `PUPPETEER_PROCESSING_ERROR: ${error.message}`,
+      400
+    );
   } finally {
     await browser.close();
   }

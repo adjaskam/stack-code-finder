@@ -1,0 +1,36 @@
+import { DocumentDefinition } from "mongoose";
+import CodeFragment, { CodeFragmentDocument } from "../model/codeFragmentModel";
+
+export type TaggedCodeFragment = {
+  tag: string;
+  searchPhrase: string;
+  amount: number;
+};
+
+export type CodeFragmentsListDto = {
+  items: DocumentDefinition<CodeFragmentDocument>[];
+  count: number;
+};
+
+export type InternalQuestion = {
+  questionId: string;
+  title: string;
+  link: string;
+};
+
+export type CodeFragment = {
+  questionId: String;
+  tag: String;
+  searchPhrase: String;
+  codeFragment: String;
+  hashMessage: String;
+};
+
+export type FetchedQuestion = {
+  owner: {
+    account_id: string;
+  };
+  question_id: string;
+  link: string;
+  title: string;
+};
