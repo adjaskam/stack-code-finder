@@ -24,44 +24,44 @@ CODE_FRAGMENTS_FETCH_LIMIT=10
 
 ## Endpoints
 * POST `/api/codefragments` -
-start a job for given `tag` (includes web scrapping procedure). The application supports the creation of duplicate extracted fragments by comparing values od MD5 hash. 
+start a job for given `tag` (includes web scrapping procedure). The application supports the creation of duplicate extracted fragments by comparing values of MD5 hash. 
 
 #### Body of the example request: 
 ```json
 {
-   "tag":"Java",
-   "searchPhrase":"int",
-   "amount":2
+   "tag": "Java",
+   "searchPhrase": "int",
+   "amount": 2
 }
 ```
 #### Response: 
 ```json
 {
-   "items":[
+   "items": [
       {
-         "_id":"6237430ad0ac68254e073113",
-         "questionId":"71547666",
-         "tag":"Java",
-         "searchPhrase":"int",
-         "codeFragment":"import java.util.Scanner;\nimport java.time.LocalDateTime;\nimport java.time.format.DateTimeFormatter; \n\nclass Main {\n  public static void main(String[] args) {\n    Scanner myObj = new Scanner(System.in);\n\n    System.out.println(\"Enter your Name, Student ID and Salary: \\n\");\n\n",
-         "hashMessage":"ce855c81eb26302839af575b7a238796",
-         "createdAt":"2022-03-20T15:06:50.872Z",
-         "updatedAt":"2022-03-20T15:06:50.872Z",
-         "__v":0
+         "_id": "6237430ad0ac68254e073113",
+         "questionId": "71547666",
+         "tag": "Java",
+         "searchPhrase": "int",
+         "codeFragment": "import java.util.Scanner;\nimport java.time.LocalDateTime;\nimport java.time.format.DateTimeFormatter; \n\nclass Main {\n  public static void main(String[] args) {\n    Scanner myObj = new Scanner(System.in);\n\n    System.out.println(\"Enter your Name, Student ID and Salary: \\n\");\n\n",
+         "hashMessage": "ce855c81eb26302839af575b7a238796",
+         "createdAt": "2022-03-20T15:06:50.872Z",
+         "updatedAt": "2022-03-20T15:06:50.872Z",
+         "__v": 0
       },
       {
-         "_id":"6237430ad0ac68254e073115",
-         "questionId":"71547666",
-         "tag":"Java",
-         "searchPhrase":"int",
-         "codeFragment":"if(50<=salary) {    \n    if(70<=salary) {\n         System.out.printIn(\"E\");\n         }\n    else {\n         System.out.println(\"C\");\n         }\n}\n",
-         "hashMessage":"2296273c33507991656cca6462008795",
-         "createdAt":"2022-03-20T15:06:50.887Z",
-         "updatedAt":"2022-03-20T15:06:50.887Z",
-         "__v":0
+         "_id": "6237430ad0ac68254e073115",
+         "questionId": "71547666",
+         "tag": "Java",
+         "searchPhrase": "int",
+         "codeFragment": "if(50<=salary) {    \n    if(70<=salary) {\n         System.out.printIn(\"E\");\n         }\n    else {\n         System.out.println(\"C\");\n         }\n}\n",
+         "hashMessage": "2296273c33507991656cca6462008795",
+         "createdAt": "2022-03-20T15:06:50.887Z",
+         "updatedAt": "2022-03-20T15:06:50.887Z",
+         "__v": 0
       }
    ],
-   "amount":2
+   "amount": 2
 }
 ```
 * GET `/api/codefragments` - get all obtained code fragments
