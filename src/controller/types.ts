@@ -26,7 +26,7 @@ export type CodeFragment = {
   hashMessage: String;
 };
 
-export type FetchedQuestion = {
+export type _FetchedQuestion = {
   owner: {
     account_id: string;
   };
@@ -34,3 +34,7 @@ export type FetchedQuestion = {
   link: string;
   title: string;
 };
+
+export type _FetchedQuestionsList = {
+  items: _FetchedQuestion[]
+}

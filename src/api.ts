@@ -4,7 +4,7 @@ import log from "./logger";
 // This is not considered a secret, and may be safely embed in client side code or distributed binaries.
 const STACK_API_KEY = "1)QIB80MJ1mCrDp0MtRRiA((";
 
-export async function fetchExampleDataFromStack(tag: string, page: number) {
+export async function fetchQuestionsFromStackAPI(tag: string, page: number) {
   const params = [
     `tagged=${tag}`,
     "site=stackoverflow",

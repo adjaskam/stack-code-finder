@@ -24,10 +24,7 @@ export async function scrapCodeFragment(url: string): Promise<string[]> {
     );
     return elements;
   } catch (error) {
-    throw new ScrapCodeFragmentError(
-      `PUPPETEER_PROCESSING_ERROR: ${error.message}`,
-      400
-    );
+    throw new ScrapCodeFragmentError(error.message, 400);
   } finally {
     await browser.close();
   }

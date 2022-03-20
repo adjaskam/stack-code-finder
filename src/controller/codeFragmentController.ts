@@ -1,14 +1,17 @@
 import { Request, Response } from "express";
 import { createCodeFragment } from "../service/codeFragmentService";
-import { fetchExampleDataFromStack } from "../api";
+import { fetchQuestionsFromStackAPI } from "../api";
 import CodeFragment, { CodeFragmentDocument } from "../model/codeFragmentModel";
 import log from "../logger";
 import { scrapCodeFragment } from "../converters/codeFragmentScrapper";
 import config from "config";
 import FetchCodeFragmentError from "../exception/FetchCodeFragmentError";
-import { getCodeBlocksContainsPhrase } from "../converters/questionsConverter";
+import {
+  getCodeBlocksContainsPhrase,
+  getInternalQuestionsList,
+} from "../converters/questionsConverter";
 import hash from "object-hash";
-import { FetchedQuestion } from "./types";
+import { _FetchedQuestionsList } from "./types";
 import { DocumentDefinition } from "mongoose";
 import { TaggedFragmentDto } from "../dto/TaggedFragmentDto";
 import { CodeFragmentsListDto } from "../dto/CodeFragmentsListDto";
@@ -37,28 +40,15 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
         400
       );
     }
-    // fetch until the limit is reached
     const managedCodeFragments: DocumentDefinition<CodeFragmentDocument>[] = [];
     do {
-      const fetchedQuestions: { items: FetchedQuestion[] } =
-        await fetchExampleDataFromStack(taggedFragmentDto.getTag(), ++page);
+      const fetchedQuestions: _FetchedQuestionsList =
+        await fetchQuestionsFromStackAPI(taggedFragmentDto.getTag(), ++page);
 
-      let mappedQuestions;
-      if (
-        Array.isArray(fetchedQuestions.items) &&
-        fetchedQuestions.items.length > 0
-      ) {
-        mappedQuestions = fetchedQuestions.items.map((item) => ({
-          questionId: item.question_id,
-          link: item.link,
-          title: item.title,
-        }));
-      }
-
+      const mappedQuestions = getInternalQuestionsList(fetchedQuestions.items);
       const existingCodeFragments = await CodeFragment.find();
       const existingHashes = existingCodeFragments.map((x) => x.hashMessage);
 
-      // scrap code fragment
       if (mappedQuestions) {
         for (const item of mappedQuestions) {
           let scrappedCodeFragment: string[] = [];
