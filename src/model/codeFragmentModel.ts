@@ -1,22 +1,33 @@
-import mongoose from "mongoose";
-
-export interface CodeFragmentDocument extends mongoose.Document {
-  questionId: String;
-  tag: String;
-  searchPhrase: String;
-  codeFragment: String;
-  hashMessage: String;
+import mongoose, { Document, Schema } from "mongoose";
+export interface CodeFragmentEntity {
+  questionId: string;
+  tag: string;
+  searchPhrase: string;
+  codeFragment: string;
+  hashMessage: string;
+}
+export interface CodeFragmentDocument extends CodeFragmentEntity, Document {
   createdAt: Date;
   updatedAt: Date;
 }
 
-const CodeFragmentSchema = new mongoose.Schema(
+const CodeFragmentSchema = new Schema(
   {
-    questionId: { type: String, required: true },
-    tag: { type: String, required: true },
-    searchPhrase: { type: String, required: true },
-    codeFragment: { type: String, required: true },
-    hashMessage: { type: String, required: true, unique: true },
+    questionId: { type: String, required: [true, "QuestionId is required"] },
+    tag: { type: String, required: [true, "Tag is required"] },
+    searchPhrase: {
+      type: String,
+      required: [true, "SearchPhrase is required"],
+    },
+    codeFragment: {
+      type: String,
+      required: [true, "CodeFragment is required"],
+    },
+    hashMessage: {
+      type: String,
+      required: [true, "HashMessage is required"],
+      unique: true,
+    },
   },
   { timestamps: true }
 );

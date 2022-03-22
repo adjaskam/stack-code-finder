@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { createCodeFragment } from "../service/codeFragmentService";
 import { fetchQuestionsFromStackAPI } from "../api";
-import CodeFragment, { CodeFragmentDocument } from "../model/codeFragmentModel";
+import CodeFragment, {
+  CodeFragmentDocument,
+  CodeFragmentEntity,
+} from "../model/codeFragmentModel";
 import log from "../logger";
 import { scrapCodeFragment } from "../converters/codeFragmentScrapper";
 import config from "config";
@@ -12,7 +15,6 @@ import {
 } from "../converters/questionsConverter";
 import hash from "object-hash";
 import { _FetchedQuestionsList } from "./types";
-import { DocumentDefinition } from "mongoose";
 import { TaggedFragmentDto } from "../dto/TaggedFragmentDto";
 import { CodeFragmentsListDto } from "../dto/CodeFragmentsListDto";
 import { validationResult } from "express-validator";
@@ -40,13 +42,14 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
         400
       );
     }
-    const managedCodeFragments: DocumentDefinition<CodeFragmentDocument>[] = [];
+    const managedCodeFragments: CodeFragmentEntity[] = [];
     do {
       const fetchedQuestions: _FetchedQuestionsList =
         await fetchQuestionsFromStackAPI(taggedFragmentDto.getTag(), ++page);
 
       const mappedQuestions = getInternalQuestionsList(fetchedQuestions.items);
-      const existingCodeFragments = await CodeFragment.find();
+      const existingCodeFragments: CodeFragmentDocument[] =
+        await CodeFragment.find();
       const existingHashes = existingCodeFragments.map((x) => x.hashMessage);
 
       if (mappedQuestions) {

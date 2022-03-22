@@ -1,0 +1,17 @@
+### LOGIN
+POST http://localhost/api/login
+content-type: application/json
+
+{
+    "email": "example@example.com",
+    "password": "zaq1@WSX"
+}
+
+### REGISTER
+POST http://localhost/api/register
+content-type: application/json
+
+{
+    "email": "example@example.com",
+    "password": "zaq1@WSX"
+}

@@ -1,13 +1,11 @@
-import { DocumentDefinition } from "mongoose";
-import Question, { CodeFragmentDocument } from "../model/codeFragmentModel";
+import CodeFragment, { CodeFragmentEntity } from "../model/codeFragmentModel";
 import log from "../logger";
-import { CodeFragment } from "../controller/types";
 
 export async function createCodeFragment(
-  codeFragment: CodeFragment
-): Promise<DocumentDefinition<CodeFragmentDocument> | null> {
+  codeFragment: CodeFragmentEntity
+): Promise<CodeFragmentEntity | null> {
   try {
-    return await Question.create(codeFragment);
+    return await CodeFragment.create(codeFragment);
   } catch (error) {
     log.error(error.message);
   }
