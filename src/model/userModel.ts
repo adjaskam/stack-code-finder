@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import isEmail from "validator/lib/isEmail";
 import bcrypt from "bcrypt";
 
 export interface UserEntity {
@@ -20,35 +19,37 @@ const UserSchema = new Schema(
   {
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: true,
       unique: true,
       lowercase: true,
-      validate: [isEmail, "Email must be in valid format"],
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
-      minlength: [8, "Minimum password length is 8 characters"],
+      required: true,
+      minlength: 8,
     },
   },
   { timestamps: true }
 );
 
 UserSchema.pre("save", async function (next) {
+  const user = this;
+  const registeredUser = await this.constructor.findOne({ email: user.email });
+  if (registeredUser) {
+    throw Error("User with this email is already registered")
+  }
   const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password, salt);
+  user.password = await bcrypt.hash(user.password, salt);
   next();
 });
 
-UserSchema.statics.login = async function (email, password) {
+UserSchema.statics.login = async function (email: string, password: string) {
   const user = await this.findOne({ email });
-
   if (user) {
     const authResult = await bcrypt.compare(password, user.password);
     if (authResult) return user;
     throw Error("Bad credentials");
   }
-
   throw Error("Account not found");
 };
 

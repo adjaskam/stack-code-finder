@@ -8,7 +8,6 @@ import CodeFragment, {
 import log from "../logger";
 import { scrapCodeFragment } from "../converters/codeFragmentScrapper";
 import config from "config";
-import FetchCodeFragmentError from "../exception/FetchCodeFragmentError";
 import {
   getCodeBlocksContainsPhrase,
   getInternalQuestionsList,
@@ -29,6 +28,7 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
     if (errors && errors.length) {
       return res.status(400).json({ errors });
     }
+    log.info(req.user?.id);
 
     const taggedFragmentDto = new TaggedFragmentDto(
       req.body.tag,
@@ -37,9 +37,8 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
     );
 
     if (taggedFragmentDto.getAmount() > codeFragmentsFetchLimit) {
-      throw new FetchCodeFragmentError(
-        `LIMIT_OF_${codeFragmentsFetchLimit}_CODE_FRAGMENTS_EXCEEDED`,
-        400
+      throw new Error(
+        `LIMIT_OF_${codeFragmentsFetchLimit}_CODE_FRAGMENTS_EXCEEDED`
       );
     }
     const managedCodeFragments: CodeFragmentEntity[] = [];
@@ -109,10 +108,7 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
       }
     } while (managedCodeFragments.length < taggedFragmentDto.getAmount());
   } catch (error) {
-    if (error instanceof FetchCodeFragmentError) {
-      return res.status(error.getErrorCode()).send(error.message);
-    }
-    res.status(409).send(error.message);
+    res.status(400).send(error.message);
   }
 }
 
@@ -125,7 +121,7 @@ export async function getAllCodeFragmentsHandler(req: Request, res: Response) {
     );
     return res.status(200).send(codeFragmentsListDto);
   } catch (error) {
-    return res.status(409).send(error.message);
+    return res.status(400).send(error.message);
   }
 }
 
@@ -143,7 +139,7 @@ export async function getAllCodeFragmentsBySearchPhraseHandler(
     );
     return res.status(200).send(codeFragmentsListDto);
   } catch (error) {
-    res.status(409).send(error.message);
+    res.status(400).send(error.message);
   }
 }
 
@@ -155,6 +151,6 @@ export async function deleteAllCodeFragmentsHandler(
     const codeFragments = await CodeFragment.deleteMany({});
     return res.status(200).send(codeFragments);
   } catch (error) {
-    res.status(409).send(error.message);
+    res.status(400).send(error.message);
   }
 }

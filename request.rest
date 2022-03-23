@@ -1,4 +1,4 @@
-### LOGIN
+### Login
 POST http://localhost/api/login
 content-type: application/json
 
@@ -7,11 +7,23 @@ content-type: application/json
     "password": "zaq1@WSX"
 }
 
-### REGISTER
+### Register
 POST http://localhost/api/register
 content-type: application/json
 
 {
     "email": "example@example.com",
     "password": "zaq1@WSX"
+}
+
+### Fetch code fragments
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpYXQiOjE2NDgwNjM1MDEsImV4cCI6MTY0ODA2NzEwMX0.baRyal-WcKzdfuToNQK9yX528cHbOEKRheHQbb2TtpY
+POST http://localhost/api/codefragments
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+   "tag": "Java",
+   "searchPhrase": "int",
+   "amount": 2
 }

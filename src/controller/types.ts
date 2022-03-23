@@ -1,5 +1,6 @@
 import { DocumentDefinition } from "mongoose";
 import CodeFragment, { CodeFragmentDocument } from "../model/codeFragmentModel";
+import { Request } from "express";
 
 export type TaggedCodeFragment = {
   tag: string;
@@ -36,5 +37,12 @@ export type _FetchedQuestion = {
 };
 
 export type _FetchedQuestionsList = {
-  items: _FetchedQuestion[]
+  items: _FetchedQuestion[];
+};
+declare module "express" {
+  interface Request {
+    user?: {
+      id: string;
+    };
+  }
 }

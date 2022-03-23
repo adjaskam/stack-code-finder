@@ -11,6 +11,7 @@ import {
   loginUserHandler,
 } from "./controller/authController";
 import { check } from "express-validator";
+import { checkUserAuthStatus } from "./middleware/checkUserAuthStatus";
 
 export default function (app: Express) {
   const authCheck = [
@@ -37,6 +38,7 @@ export default function (app: Express) {
   // codefragments routes
   app.post(
     "/api/codefragments",
+    checkUserAuthStatus,
     [
       check("tag")
         .trim()
