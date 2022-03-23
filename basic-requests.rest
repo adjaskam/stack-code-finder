@@ -1,13 +1,4 @@
-### Login
-POST http://localhost/api/login
-content-type: application/json
-
-{
-    "email": "example@example.com",
-    "password": "zaq1@WSX"
-}
-
-### Register
+### Endpoint -> Register user account
 POST http://localhost/api/register
 content-type: application/json
 
@@ -16,8 +7,17 @@ content-type: application/json
     "password": "zaq1@WSX"
 }
 
-### Fetch code fragments
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpYXQiOjE2NDgwNjM1MDEsImV4cCI6MTY0ODA2NzEwMX0.baRyal-WcKzdfuToNQK9yX528cHbOEKRheHQbb2TtpY
+### Login -> Login user
+POST http://localhost/api/login
+content-type: application/json
+
+{
+    "email": "example@example.com",
+    "password": "zaq1@WSX"
+}
+
+### Endpoint -> Fetch code fragments
+@token = JWT_TOKEN
 POST http://localhost/api/codefragments
 content-type: application/json
 Authorization: Bearer {{token}}
