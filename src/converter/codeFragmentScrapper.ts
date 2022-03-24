@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+import CodeFragmentError from "../error/CodeFragmentError";
 
 const SEARCH_XPATH = "//pre[contains(@class, 's-code-block')]" as string;
 
@@ -23,7 +24,7 @@ export async function scrapCodeFragment(url: string): Promise<string[]> {
     );
     return elements;
   } catch (error) {
-    throw new Error(error.message);
+    throw CodeFragmentError.scrapperIssue(error.message);
   } finally {
     await browser.close();
   }

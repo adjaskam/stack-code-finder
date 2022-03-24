@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 import bcrypt from "bcrypt";
+import DatabaseError from "../error/DatabaseError";
 
 export interface UserEntity {
   email: string;
@@ -36,7 +37,7 @@ UserSchema.pre("save", async function (next) {
   const user = this;
   const registeredUser = await this.constructor.findOne({ email: user.email });
   if (registeredUser) {
-    throw Error("User with this email is already registered")
+    throw new DatabaseError("User with this email is already registered");
   }
   const salt = await bcrypt.genSalt();
   user.password = await bcrypt.hash(user.password, salt);
@@ -48,9 +49,9 @@ UserSchema.statics.login = async function (email: string, password: string) {
   if (user) {
     const authResult = await bcrypt.compare(password, user.password);
     if (authResult) return user;
-    throw Error("Bad credentials");
+    throw new DatabaseError("Bad credentials");
   }
-  throw Error("Account not found");
+  throw new DatabaseError("Account not found");
 };
 
 const User = mongoose.model<UserDocument, UserInterface>(

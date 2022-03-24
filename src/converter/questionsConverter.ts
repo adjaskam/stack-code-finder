@@ -1,4 +1,4 @@
-import { InternalQuestion, _FetchedQuestion } from "../controller/types";
+import { InternalQuestion, _FetchedQuestion } from "../controller/types/codeFragmentTypes";
 
 export function getInternalQuestionsList(
   fetchedQuestions: _FetchedQuestion[]

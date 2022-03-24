@@ -1,28 +1,38 @@
-import { Request, Response } from "express";
-import { createCodeFragment } from "../service/codeFragmentService";
+import { NextFunction, Request, Response } from "express";
+import {
+  createCodeFragment,
+  deleteAllCodeFragments,
+  findAllCodeFragmentsBySearchPhrase,
+  findAllCodeFragments,
+} from "../service/codeFragmentService";
 import { fetchQuestionsFromStackAPI } from "../api";
 import CodeFragment, {
   CodeFragmentDocument,
   CodeFragmentEntity,
 } from "../model/codeFragmentModel";
 import log from "../logger";
-import { scrapCodeFragment } from "../converters/codeFragmentScrapper";
+import { scrapCodeFragment } from "../converter/codeFragmentScrapper";
 import config from "config";
 import {
   getCodeBlocksContainsPhrase,
   getInternalQuestionsList,
-} from "../converters/questionsConverter";
+} from "../converter/questionsConverter";
 import hash from "object-hash";
-import { _FetchedQuestionsList } from "./types";
+import { _FetchedQuestionsList } from "./types/codeFragmentTypes";
 import { TaggedFragmentDto } from "../dto/TaggedFragmentDto";
 import { CodeFragmentsListDto } from "../dto/CodeFragmentsListDto";
 import { validationResult } from "express-validator";
+import ApiError from "../error/ApiError";
 
 const codeFragmentsFetchLimit = config.get("codeFragmentsFetchLimit") as number;
 
 let page = 0;
 
-export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
+export async function fetchCodeFragmentsHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const errors = validationResult(req).array();
   try {
     if (errors && errors.length) {
@@ -37,7 +47,7 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
     );
 
     if (taggedFragmentDto.getAmount() > codeFragmentsFetchLimit) {
-      throw new Error(
+      throw ApiError.badRequest(
         `LIMIT_OF_${codeFragmentsFetchLimit}_CODE_FRAGMENTS_EXCEEDED`
       );
     }
@@ -108,49 +118,55 @@ export async function fetchCodeFragmentsHandler(req: Request, res: Response) {
       }
     } while (managedCodeFragments.length < taggedFragmentDto.getAmount());
   } catch (error) {
-    res.status(400).send(error.message);
+    next(error);
   }
 }
 
-export async function getAllCodeFragmentsHandler(req: Request, res: Response) {
+export async function getAllCodeFragmentsHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    const codeFragments = await CodeFragment.find();
+    const codeFragments = await findAllCodeFragments();
     const codeFragmentsListDto = new CodeFragmentsListDto(
       codeFragments,
       codeFragments.length
     );
     return res.status(200).send(codeFragmentsListDto);
   } catch (error) {
-    return res.status(400).send(error.message);
+    next(error);
   }
 }
 
 export async function getAllCodeFragmentsBySearchPhraseHandler(
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) {
   try {
-    const codeFragments = await CodeFragment.find({
-      searchPhrase: req.params.searchPhrase,
-    });
+    const codeFragments = await findAllCodeFragmentsBySearchPhrase(
+      req.params.searchPhrase
+    );
     const codeFragmentsListDto = new CodeFragmentsListDto(
       codeFragments,
       codeFragments.length
     );
     return res.status(200).send(codeFragmentsListDto);
   } catch (error) {
-    res.status(400).send(error.message);
+    next(error);
   }
 }
 
 export async function deleteAllCodeFragmentsHandler(
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) {
   try {
-    const codeFragments = await CodeFragment.deleteMany({});
+    const codeFragments = await deleteAllCodeFragments();
     return res.status(200).send(codeFragments);
   } catch (error) {
-    res.status(400).send(error.message);
+    next(error);
   }
 }

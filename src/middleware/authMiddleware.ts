@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import config from "config";
+import ApiError from "../error/ApiError";
+
 const tokenSecret = config.get("tokenSecret") as string;
 
 export async function checkUserAuthStatus(
@@ -17,7 +19,7 @@ export async function checkUserAuthStatus(
     const { id } = (await jwt.verify(token, tokenSecret)) as { id: string };
     req.user = { id: id };
   } catch (error) {
-    return res.sendStatus(403);
+    next(ApiError.unauthorized(error.message));
   }
   next();
 }

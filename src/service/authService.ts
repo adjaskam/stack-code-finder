@@ -1,11 +1,11 @@
 import User, { UserEntity } from "../model/userModel";
-import log from "../logger";
+import ApiError from "../error/ApiError";
 
 export async function createUser(user: UserEntity): Promise<UserEntity | null> {
   try {
     return await User.create(user);
   } catch (error) {
-    throw new Error(error.message);
+    throw ApiError.badRequest(error.message);
   }
 }
 
@@ -13,7 +13,7 @@ export async function loginUser(user: UserEntity): Promise<UserEntity | null> {
   try {
     return await User.login(user.email, user.password);
   } catch (error) {
-    throw new Error(error.message);
+    throw ApiError.unauthorized(error.message);
   }
 }
 
@@ -23,7 +23,6 @@ export async function findUserByEmail(
   try {
     return await User.findOne({ email: email });
   } catch (error) {
-    log.error(error.message);
+    throw ApiError.badRequest(error.message);
   }
-  return null;
 }

@@ -1,5 +1,7 @@
 import CodeFragment, { CodeFragmentEntity } from "../model/codeFragmentModel";
-import log from "../logger";
+import ApiError from "../error/ApiError";
+import { DeleteResult } from "mongodb";
+import CodeFragmentError from "../error/CodeFragmentError";
 
 export async function createCodeFragment(
   codeFragment: CodeFragmentEntity
@@ -7,7 +9,32 @@ export async function createCodeFragment(
   try {
     return await CodeFragment.create(codeFragment);
   } catch (error) {
-    log.error(error.message);
+    throw ApiError.badRequest(error.message);
   }
-  return null;
+}
+
+export async function findAllCodeFragments(): Promise<CodeFragmentEntity[]> {
+  try {
+    return await CodeFragment.find();
+  } catch (error) {
+    throw ApiError.badRequest(error.message);
+  }
+}
+
+export async function findAllCodeFragmentsBySearchPhrase(
+  searchPhrase: string
+): Promise<CodeFragmentEntity[]> {
+  try {
+    return await CodeFragment.find({ searchPhrase: searchPhrase });
+  } catch (error) {
+    throw ApiError.badRequest(error.message);
+  }
+}
+
+export async function deleteAllCodeFragments(): Promise<DeleteResult> {
+  try {
+    return await CodeFragment.deleteMany({});
+  } catch (error) {
+    throw ApiError.badRequest(error.message);
+  }
 }

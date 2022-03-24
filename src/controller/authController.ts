@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import config from "config";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
@@ -7,7 +7,11 @@ import { createUser, loginUser } from "../service/authService";
 const tokenSecret = config.get("tokenSecret") as string;
 
 // check for email reuse placed at DB level
-export async function registerUserHandler(req: Request, res: Response) {
+export async function registerUserHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const errors = validationResult(req).array();
   if (errors && errors.length) {
     return res.status(400).json({ errors });
@@ -18,12 +22,16 @@ export async function registerUserHandler(req: Request, res: Response) {
     const user = await createUser({ email, password });
     return res.send(user);
   } catch (error) {
-    return res.status(401).send(error.message);
+    next(error);
   }
 }
 
 // base authentication placed at DB level
-export async function loginUserHandler(req: Request, res: Response) {
+export async function loginUserHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const errors = validationResult(req).array();
   if (errors && errors.length) {
     return res.status(400).json({ errors });
@@ -39,6 +47,6 @@ export async function loginUserHandler(req: Request, res: Response) {
       return res.send(accessToken);
     }
   } catch (error) {
-    return res.status(401).send(error.message);
+    next(error);
   }
 }
