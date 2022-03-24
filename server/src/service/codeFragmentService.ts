@@ -1,7 +1,6 @@
 import CodeFragment, { CodeFragmentEntity } from "../model/codeFragmentModel";
 import ApiError from "../error/ApiError";
 import { DeleteResult } from "mongodb";
-import CodeFragmentError from "../error/CodeFragmentError";
 
 export async function createCodeFragment(
   codeFragment: CodeFragmentEntity

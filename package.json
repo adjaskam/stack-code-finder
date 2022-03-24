@@ -1,0 +1,21 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "description": "root project for stack-code-finder",
+  "scripts": {
+    "dev:fullstack": "concurrently \"cd server && docker-compose up --build\" \"cd client && npm start\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adjaskam/node-app.git"
+  },
+  "author": "adjaskam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adjaskam/node-app/issues"
+  },
+  "homepage": "https://github.com/adjaskam/node-app#readme",
+  "dependencies": {
+    "concurrently": "^7.0.0"
+  }
+}
