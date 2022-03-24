@@ -21,7 +21,6 @@ import hash from "object-hash";
 import { _FetchedQuestionsList } from "./types/codeFragmentTypes";
 import { TaggedFragmentDto } from "../dto/TaggedFragmentDto";
 import { CodeFragmentsListDto } from "../dto/CodeFragmentsListDto";
-import { validationResult } from "express-validator";
 import ApiError from "../error/ApiError";
 
 const codeFragmentsFetchLimit = config.get("codeFragmentsFetchLimit") as number;
@@ -33,11 +32,7 @@ export async function fetchCodeFragmentsHandler(
   res: Response,
   next: NextFunction
 ) {
-  const errors = validationResult(req).array();
   try {
-    if (errors && errors.length) {
-      return res.status(400).json({ errors });
-    }
     log.info(req.user?.id);
 
     const taggedFragmentDto = new TaggedFragmentDto(

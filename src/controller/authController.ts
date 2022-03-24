@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import config from "config";
-import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import { createUser, loginUser } from "../service/authService";
 
@@ -12,10 +11,6 @@ export async function registerUserHandler(
   res: Response,
   next: NextFunction
 ) {
-  const errors = validationResult(req).array();
-  if (errors && errors.length) {
-    return res.status(400).json({ errors });
-  }
   const { email, password } = req.body;
 
   try {
@@ -32,10 +27,6 @@ export async function loginUserHandler(
   res: Response,
   next: NextFunction
 ) {
-  const errors = validationResult(req).array();
-  if (errors && errors.length) {
-    return res.status(400).json({ errors });
-  }
   const { email, password } = req.body;
 
   try {

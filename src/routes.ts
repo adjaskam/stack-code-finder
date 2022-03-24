@@ -10,26 +10,41 @@ import {
   registerUserHandler,
   loginUserHandler,
 } from "./controller/authController";
-import { checkUserAuthStatus } from "./middleware/authMiddleware";
-import { API_PATHS, VALIDATORS } from "./middleware/validators";
-
-
+import {
+  credentialsValidationSchema,
+  fetchCodeFragmentsValidationSchema,
+  validate,
+  fetchCodeFragmentsBySearchPhraseValidationSchema,
+} from "./middleware/validators";
 
 export default function (app: Express) {
   // auth routes
-  app.post(API_PATHS.REGISTER, VALIDATORS.find(item => item.type(API_PATHS.REGISTER))?.validator, registerUserHandler);
-  app.post(API_PATHS.LOGIN, authCheck, loginUserHandler);
+  app.post(
+    "/api/register",
+    credentialsValidationSchema(),
+    validate,
+    registerUserHandler
+  );
+  app.post(
+    "/api/login",
+    credentialsValidationSchema(),
+    validate,
+    loginUserHandler
+  );
 
   // codefragments routes
   app.post(
-    API_PATHS.CODE_FRAGMENTS,
-    checkUserAuthStatus,,
+    "/api/codefragments",
+    fetchCodeFragmentsValidationSchema(),
+    validate,
     fetchCodeFragmentsHandler
   );
   app.get(
-    `${API_PATHS.CODE_FRAGMENTS}/:searchPhrase`,
+    "/api/codefragments/:searchPhrase",
+    fetchCodeFragmentsBySearchPhraseValidationSchema(),
+    validate,
     getAllCodeFragmentsBySearchPhraseHandler
   );
-  app.get(API_PATHS.CODE_FRAGMENTS, getAllCodeFragmentsHandler);
-  app.delete(API_PATHS.CODE_FRAGMENTS, deleteAllCodeFragmentsHandler);
+  app.get("/api/codefragments", getAllCodeFragmentsHandler);
+  app.delete("/api/codefragments", deleteAllCodeFragmentsHandler);
 }
