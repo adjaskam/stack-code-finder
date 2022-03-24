@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import CodeFragmentError from "./error/CodeFragmentError";
+import ApiError from "./error/ApiError";
 import log from "./logger";
 
 // This is not considered a secret, and may be safely embed in client side code or distributed binaries.
@@ -19,6 +19,6 @@ export async function fetchQuestionsFromStackAPI(tag: string, page: number) {
     log.info(`RESPONSE_RECEIVED FROM: ${url}`);
     return response.json();
   } catch (error) {
-    throw CodeFragmentError.stackApiIssue(error.message);
+    throw ApiError.stackApiIssue(error.message);
   }
 }
