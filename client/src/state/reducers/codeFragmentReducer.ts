@@ -1,14 +1,19 @@
-import { Action, CodeFragmentState } from "../actions";
+import { Action, CodeFragmentMeta } from "../actions";
 import { ActionType } from "../action-types";
 
-const initialState: CodeFragmentState = {
-  codeFragments: [],
+const initialState: CodeFragmentMeta = {
+  searchPhrase: "",
+  tag: "",
 };
 
-const reducer = (state: CodeFragmentState = initialState, action: Action) => {
+const reducer = (state: CodeFragmentMeta = initialState, action: Action) => {
   switch (action.type) {
     case ActionType.FETCH:
-      return { ...state, codeFragments: action.payload.codeFragments };
+      return {
+        ...state,
+        searchPhrase: action.payload.searchPhrase,
+        tag: action.payload.tag,
+      };
     default:
       return state;
   }

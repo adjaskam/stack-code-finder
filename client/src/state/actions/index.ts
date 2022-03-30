@@ -1,15 +1,11 @@
-type CodeFragment = {
-  link: string;
-  fragment: string;
-};
-
-export type CodeFragmentState = {
-  codeFragments: CodeFragment[];
+export type CodeFragmentMeta = {
+  searchPhrase: string;
+  tag: string;
 };
 
 interface FetchCodeFragmentAction {
   type: "fetch";
-  payload: CodeFragmentState;
+  payload: CodeFragmentMeta;
 }
 
 export type Action = FetchCodeFragmentAction;
