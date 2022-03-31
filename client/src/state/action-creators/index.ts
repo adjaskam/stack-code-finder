@@ -22,14 +22,6 @@ export const setTag = (tag: string) => {
   };
 };
 
-export const setLoading = () => {
-  return (dispatch: Dispatch<Action>) => {
-    dispatch({
-      type: ActionType.SET_LOADING,
-    });
-  };
-};
-
 export const fetchCodeFragments = () => {
   return async (dispatch: Dispatch<Action>, getState: () => State) => {
     const { codeFragment } = getState();
