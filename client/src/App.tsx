@@ -1,13 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators, State } from "./state";
-import Accordion from "react-bootstrap/Accordion";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import Dropdown from "react-bootstrap/Dropdown";
-import SplitButton from "react-bootstrap/SplitButton";
+import {
+  Accordion,
+  FloatingLabel,
+  FormControl,
+  Form,
+  Container,
+  Row,
+  Col,
+  Button,
+} from "react-bootstrap";
 import styled from "styled-components";
 
 const RootContainer = styled.div`
@@ -21,70 +24,57 @@ const RootContainer = styled.div`
   background-size: cover;
 `;
 
-const Title = styled.h1`
-  text-align: center;
-  color: black;
+const InputControlCol = styled(Col)`
+  max-height: 58px;
+  display: flex;
 `;
 
 function App() {
   const dispatch = useDispatch();
-  const { fetchCodeFragments } = bindActionCreators(actionCreators, dispatch);
+  const { setSearchPhrase, setTag, fetchCodeFragments } = bindActionCreators(
+    actionCreators,
+    dispatch
+  );
 
   const state = useSelector((state: State) => state.codeFragment);
   return (
     <RootContainer>
-      <Title className="p-3">Search code fragment</Title>
-      <InputGroup className="px-3">
-        <FormControl aria-label="Text input with dropdown button" />
-        <SplitButton
-          variant="primary"
-          title="Action"
-          id="segmented-button-dropdown-1"
-        >
-          <Dropdown.Item href="#">Action</Dropdown.Item>
-          <Dropdown.Item href="#">Another action</Dropdown.Item>
-          <Dropdown.Item href="#">Something else here</Dropdown.Item>
-          <Dropdown.Divider />
-          <Dropdown.Item href="#">Separated link</Dropdown.Item>
-        </SplitButton>
-      </InputGroup>
+      <Container className="mt-3">
+        <Row className="g-1">
+          <Col xs={12} md={10}>
+            <FloatingLabel controlId="floatingInput" label="Search code phrase">
+              <FormControl
+                as="textarea"
+                onChange={(ev: React.BaseSyntheticEvent) => {
+                  setSearchPhrase(ev.target.value);
+                }}
+              />
+            </FloatingLabel>
+          </Col>
+          <InputControlCol xs={12} md={1}>
+            <Form.Select
+              className="text-center"
+              onChange={(ev: React.BaseSyntheticEvent) => {
+                setTag(ev.target.value);
+              }}
+            >
+              <option value="Java">Java</option>
+              <option value="Rust">Rust</option>
+              <option value="Golang">Golang</option>
+            </Form.Select>
+          </InputControlCol>
+          <InputControlCol xs={12} md={1}>
+            <Button onClick={fetchCodeFragments}>Fetch</Button>
+          </InputControlCol>
+        </Row>
+      </Container>
       <Accordion className="p-3">
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>Accordion Item #1</Accordion.Header>
-          <Accordion.Body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="1">
-          <Accordion.Header>Accordion Item #2</Accordion.Header>
-          <Accordion.Body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="2">
-          <Accordion.Header>Accordion Item #3</Accordion.Header>
-          <Accordion.Body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </Accordion.Body>
-        </Accordion.Item>
+        {state.codeFragments?.map((item, index) => (
+          <Accordion.Item eventKey={index.toString()}>
+            <Accordion.Header>{item.hashMessage}</Accordion.Header>
+            <Accordion.Body>{item.codeFragment}</Accordion.Body>
+          </Accordion.Item>
+        ))}
       </Accordion>
     </RootContainer>
   );

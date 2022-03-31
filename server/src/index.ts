@@ -12,12 +12,12 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: "http://localhost:3000",
-//   })
-// );
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+  })
+);
 
 app.listen(port, host, () => {
   log.info(`SERVER_IS_LISTENING_ON: http://${host}:${port}`);

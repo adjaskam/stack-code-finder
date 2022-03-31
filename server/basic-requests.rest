@@ -27,3 +27,8 @@ Authorization: Bearer {{token}}
    "searchPhrase": "int",
    "amount": 2
 }
+
+### Endpoint -> Delet all code fragments
+@token = JWT_TOKEN
+DELETE http://localhost/api/codefragments
+content-type: application/json
