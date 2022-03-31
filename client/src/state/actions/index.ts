@@ -1,3 +1,4 @@
+import { CancelTokenSource } from "axios";
 import { ActionType } from "../action-types/index";
 import { CodeFragment } from "../reducers/codeFragmentReducer";
 
@@ -20,8 +21,14 @@ interface FetchCodeFragmentsAction {
   payload: CodeFragment[];
 }
 
+interface SetAbortTokenFetchCodeFragmentsAction {
+  type: ActionType.SET_ABORT_TOKEN_FETCH_CODE_FRAGMENTS;
+  payload: CancelTokenSource | undefined;
+}
+
 export type Action =
   | SetSearchPhraseAction
   | SetTagAction
   | SetLoadingAction
-  | FetchCodeFragmentsAction;
+  | FetchCodeFragmentsAction
+  | SetAbortTokenFetchCodeFragmentsAction;

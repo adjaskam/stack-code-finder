@@ -6,6 +6,7 @@ import {
   deleteAllCodeFragmentsHandler,
 } from "./controller/codeFragmentController";
 
+import { handleApplicationError } from "./middleware/errorHandlerMiddleware";
 import {
   registerUserHandler,
   loginUserHandler,
@@ -47,4 +48,6 @@ export default function (app: Express) {
   );
   app.get("/api/codefragments", getAllCodeFragmentsHandler);
   app.delete("/api/codefragments", deleteAllCodeFragmentsHandler);
+  
+  app.use(handleApplicationError);
 }

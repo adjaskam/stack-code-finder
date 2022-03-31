@@ -3,4 +3,5 @@ export enum ActionType {
     SET_TAG = "set_tag",
     SET_LOADING = "set_loading",
     FETCH_CODE_FRAGMENTS = "fetch_code_fragments",
+    SET_ABORT_TOKEN_FETCH_CODE_FRAGMENTS = "set_abort_token_fetch_code_fragments"
 }

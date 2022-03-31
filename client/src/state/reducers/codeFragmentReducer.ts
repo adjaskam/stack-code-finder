@@ -1,5 +1,6 @@
 import { Action } from "../actions";
 import { ActionType } from "../action-types";
+import { CancelTokenSource } from "axios";
 
 export type CodeFragment = {
   questionId: string;
@@ -14,6 +15,7 @@ type CodeFragmentState = {
   tag: string;
   isLoading: boolean;
   codeFragments: CodeFragment[];
+  abortToken: CancelTokenSource | undefined;
 };
 
 const initialState: CodeFragmentState = {
@@ -21,6 +23,7 @@ const initialState: CodeFragmentState = {
   tag: "Java",
   isLoading: false,
   codeFragments: [],
+  abortToken: undefined
 };
 
 const reducer = (state: CodeFragmentState = initialState, action: Action) => {
@@ -44,6 +47,11 @@ const reducer = (state: CodeFragmentState = initialState, action: Action) => {
       return {
         ...state,
         codeFragments: action.payload,
+      };
+    case ActionType.SET_ABORT_TOKEN_FETCH_CODE_FRAGMENTS:
+      return {
+        ...state,
+        abortToken: action.payload,
       };
     default:
       return state;

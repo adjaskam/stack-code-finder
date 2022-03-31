@@ -32,10 +32,8 @@ const InputControlCol = styled(Col)`
 
 function App() {
   const dispatch = useDispatch();
-  const { setSearchPhrase, setTag, fetchCodeFragments } = bindActionCreators(
-    actionCreators,
-    dispatch
-  );
+  const { setSearchPhrase, setTag, fetchCodeFragments, removeCancelToken } =
+    bindActionCreators(actionCreators, dispatch);
 
   const state = useSelector((state: State) => state.codeFragment);
   return (
@@ -75,6 +73,15 @@ function App() {
             <div className="text-center">
               <Spinner animation="border" variant="dark" className="mb-3" />
               <h5> Fetching code fragments...</h5>
+              <Button
+                onClick={(e) => {
+                  if (state.abortToken) {
+                    state.abortToken.cancel();
+                    console.log("xxx");
+                  }
+                  return removeCancelToken();
+                }}
+              >Cancel request</Button>
             </div>
           )}
           <Accordion className="my-3">

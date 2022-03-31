@@ -34,6 +34,14 @@ export async function fetchCodeFragmentsHandler(
 ) {
   try {
     log.info(req.user?.id);
+    let isRequestCancelledByClient = false;
+
+    // to handle the case when client aborted the request
+    // to not generate backend overload, we check that each iteration of mapping the question
+    // if "isRequestCancelledByClient" is true -> throw an ApiError
+    req.socket.on("close", (err: Error) => {
+      isRequestCancelledByClient = true;
+    });
 
     const taggedFragmentDto = new TaggedFragmentDto(
       req.body.tag,
@@ -58,6 +66,9 @@ export async function fetchCodeFragmentsHandler(
 
       if (mappedQuestions) {
         for (const item of mappedQuestions) {
+          if (isRequestCancelledByClient) {
+            throw ApiError.badRequest(`REQUEST_CANCELLED_BY_CLIENT`);
+          }
           let scrappedCodeFragment: string[] = [];
           try {
             scrappedCodeFragment = await scrapCodeFragment(item.link);
@@ -113,6 +124,9 @@ export async function fetchCodeFragmentsHandler(
       }
     } while (managedCodeFragments.length < taggedFragmentDto.getAmount());
   } catch (error) {
+    if (error instanceof ApiError) {
+      console.log("xd");
+    }
     next(error);
   }
 }

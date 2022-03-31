@@ -22,6 +22,15 @@ export const setTag = (tag: string) => {
   };
 };
 
+export const removeCancelToken = () => {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.SET_ABORT_TOKEN_FETCH_CODE_FRAGMENTS,
+      payload: undefined,
+    });
+  };
+};
+
 export const fetchCodeFragments = () => {
   return async (dispatch: Dispatch<Action>, getState: () => State) => {
     const { codeFragment } = getState();
@@ -35,7 +44,18 @@ export const fetchCodeFragments = () => {
       type: ActionType.SET_LOADING,
     });
     try {
-      const apiResponse = await axios.post("/codefragments", body);
+      // set CancelTokenSource in case user want to abort the request
+      let CancelToken = axios.CancelToken;
+      let source = CancelToken.source();
+      dispatch({
+        type: ActionType.SET_ABORT_TOKEN_FETCH_CODE_FRAGMENTS,
+        payload: source,
+      });
+
+      // fetch code fragments from backend API
+      const apiResponse = await axios.post("/codefragments", body, {
+        cancelToken: source.token,
+      });
       dispatch({
         type: ActionType.FETCH_CODE_FRAGMENTS,
         payload: apiResponse.data.items,
@@ -44,6 +64,10 @@ export const fetchCodeFragments = () => {
     } finally {
       dispatch({
         type: ActionType.SET_LOADING,
+      });
+      dispatch({
+        type: ActionType.SET_ABORT_TOKEN_FETCH_CODE_FRAGMENTS,
+        payload: undefined,
       });
     }
   };

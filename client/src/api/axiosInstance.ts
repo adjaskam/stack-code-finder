@@ -23,4 +23,5 @@ export default {
   put: axios.put,
   delete: axios.delete,
   patch: axios.patch,
+  CancelToken: axios.CancelToken
 };
