@@ -10,12 +10,13 @@ import {
   Row,
   Col,
   Button,
+  Spinner,
 } from "react-bootstrap";
 import styled from "styled-components";
+import { CodeBlock, dracula } from "react-code-blocks";
 
 const RootContainer = styled.div`
   height: 100vh;
-  width: 100%;
   display: flex;
   flex-direction: column;
   background-color: #bdc1c6;
@@ -41,7 +42,7 @@ function App() {
     <RootContainer>
       <Container className="mt-3">
         <Row className="g-1">
-          <Col xs={12} md={10}>
+          <Col lg={10}>
             <FloatingLabel controlId="floatingInput" label="Search code phrase">
               <FormControl
                 as="textarea"
@@ -51,7 +52,7 @@ function App() {
               />
             </FloatingLabel>
           </Col>
-          <InputControlCol xs={12} md={1}>
+          <InputControlCol lg={1}>
             <Form.Select
               className="text-center"
               onChange={(ev: React.BaseSyntheticEvent) => {
@@ -63,19 +64,35 @@ function App() {
               <option value="Golang">Golang</option>
             </Form.Select>
           </InputControlCol>
-          <InputControlCol xs={12} md={1}>
+          <InputControlCol lg={1}>
             <Button onClick={fetchCodeFragments}>Fetch</Button>
           </InputControlCol>
         </Row>
       </Container>
-      <Accordion className="p-3">
-        {state.codeFragments?.map((item, index) => (
-          <Accordion.Item eventKey={index.toString()}>
-            <Accordion.Header>{item.hashMessage}</Accordion.Header>
-            <Accordion.Body>{item.codeFragment}</Accordion.Body>
-          </Accordion.Item>
-        ))}
-      </Accordion>
+      <Container fluid>
+        <Row className="d-flex justify-content-center mt-3">
+          {state.isLoading && (
+            <div className="text-center">
+              <Spinner animation="border" variant="dark" className="mb-3" />
+              <h5> Fetching code fragments...</h5>
+            </div>
+          )}
+          <Accordion className="my-3">
+            {state.codeFragments?.map((item, index) => (
+              <Accordion.Item eventKey={index.toString()}>
+                <Accordion.Header>{item.hashMessage}</Accordion.Header>
+                <Accordion.Body>
+                  <CodeBlock
+                    text={item.codeFragment}
+                    theme={dracula}
+                    language={item.tag}
+                  />
+                </Accordion.Body>
+              </Accordion.Item>
+            ))}
+          </Accordion>
+        </Row>
+      </Container>
     </RootContainer>
   );
 }

@@ -33,18 +33,26 @@ export const setLoading = () => {
 export const fetchCodeFragments = () => {
   return async (dispatch: Dispatch<Action>, getState: () => State) => {
     const { codeFragment } = getState();
-    const body = { searchPhrase: codeFragment.searchPhrase, tag: codeFragment.tag, amount: 5 };
+    const body = {
+      searchPhrase: codeFragment.searchPhrase.trim(),
+      tag: codeFragment.tag,
+      amount: 2,
+    };
+
+    dispatch({
+      type: ActionType.SET_LOADING,
+    });
     try {
       const apiResponse = await axios.post("/codefragments", body);
-      setLoading();
-
       dispatch({
         type: ActionType.FETCH_CODE_FRAGMENTS,
         payload: apiResponse.data.items,
       });
     } catch (error) {
     } finally {
-      setLoading();
+      dispatch({
+        type: ActionType.SET_LOADING,
+      });
     }
   };
 };

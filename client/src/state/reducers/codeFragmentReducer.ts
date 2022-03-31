@@ -18,7 +18,7 @@ type CodeFragmentState = {
 
 const initialState: CodeFragmentState = {
   searchPhrase: "",
-  tag: "",
+  tag: "Java",
   isLoading: false,
   codeFragments: [],
 };
