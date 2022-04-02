@@ -4,6 +4,7 @@ import {
   deleteAllCodeFragments,
   findAllCodeFragmentsBySearchPhrase,
   findAllCodeFragments,
+  findOneAndUpdateCodeFragment,
 } from "../services/code-fragment-service";
 import { fetchQuestionsFromStackAPI } from "../api";
 import CodeFragment, {
@@ -36,8 +37,11 @@ export async function fetchCodeFragmentsHandler(
 ) {
   let page = 0;
   try {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw ApiError.badRequest(`CANNOT_FOUND_USER_ID`);
+    }
     const start = new Date().getTime();
-    log.info(req.user?.id);
     let isRequestCancelledByClient = false;
 
     // to handle the case when client aborted the request
@@ -73,6 +77,9 @@ export async function fetchCodeFragmentsHandler(
       const mappedQuestions = getInternalQuestionsList(fetchedQuestions.items);
       const existingCodeFragments: CodeFragmentDocument[] =
         await CodeFragment.find();
+      const existingUser = existingCodeFragments
+        .map((x) => x.usersOwn)
+        .find((x) => x.includes(userId));
       const existingHashes = existingCodeFragments.map((x) => x.hashMessage);
 
       if (mappedQuestions) {
@@ -95,6 +102,7 @@ export async function fetchCodeFragmentsHandler(
             log.info(`RESULT_LENGTH: ${results.length}`);
 
             for (const index in results) {
+              let managedCodeFragment;
               const codeBlock = results[index];
               const codeBlockHash = hash.MD5(`${item.questionId}.${codeBlock}`);
               log.info(`PROCESSED_CODE_BLOCK: ${codeBlock}`);
@@ -105,15 +113,24 @@ export async function fetchCodeFragmentsHandler(
                 )}`
               );
 
-              if (existingHashes.includes(codeBlockHash)) continue;
+              if (existingHashes.includes(codeBlockHash) && existingUser)
+                continue;
 
-              const managedCodeFragment = await createCodeFragment({
-                questionId: item.questionId,
-                tag: taggedFragmentDto.getTag(),
-                searchPhrase: taggedFragmentDto.getSearchPhrase(),
-                codeFragment: codeBlock,
-                hashMessage: codeBlockHash,
-              });
+              if (existingHashes.includes(codeBlockHash) && !existingUser) {
+                managedCodeFragment = await findOneAndUpdateCodeFragment(
+                  codeBlockHash,
+                  userId
+                );
+              } else if (!existingHashes.includes(codeBlockHash)) {
+                managedCodeFragment = await createCodeFragment({
+                  questionId: item.questionId,
+                  tag: taggedFragmentDto.getTag(),
+                  searchPhrase: taggedFragmentDto.getSearchPhrase(),
+                  codeFragment: codeBlock,
+                  hashMessage: codeBlockHash,
+                  usersOwn: [userId],
+                });
+              }
 
               if (managedCodeFragment) {
                 managedCodeFragments.push(managedCodeFragment);
@@ -168,6 +185,27 @@ export async function getAllCodeFragmentsBySearchPhraseHandler(
     const codeFragments = await findAllCodeFragmentsBySearchPhrase(
       req.params.searchPhrase
     );
+    const codeFragmentsListDto = new CodeFragmentsListDto(
+      codeFragments,
+      codeFragments.length
+    );
+    return res.status(200).send(codeFragmentsListDto);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAllCodeFragmentsForUserHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const userId = req.user?.id;
+  try {
+    if (!userId) {
+      throw ApiError.badRequest("CANNOT_FIND_USER_ID");
+    }
+    const codeFragments = await findAllCodeFragmentsBySearchPhrase(userId);
     const codeFragmentsListDto = new CodeFragmentsListDto(
       codeFragments,
       codeFragments.length
