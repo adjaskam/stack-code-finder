@@ -1,6 +1,6 @@
 import express from "express";
 import config from "config";
-import log from "./logger";
+import log from "./loggers";
 import connect from "./db/connect";
 import routes from "./routes";
 import cors from "cors";

@@ -1,11 +1,19 @@
-import { CodeFragmentEntity } from "../model/codeFragmentModel";
+import { CodeFragmentEntity } from "../models/code-fragment-model";
 
 export class CodeFragmentsListDto {
   private items: CodeFragmentEntity[];
   private readonly amount: number;
-  constructor(items: CodeFragmentEntity[], amount: number) {
+  private executionTime: number | undefined;
+  constructor(
+    items: CodeFragmentEntity[],
+    amount: number,
+    executionTime?: number
+  ) {
     this.items = items;
     this.amount = amount;
+    if (executionTime) {
+      this.executionTime = executionTime;
+    }
   }
 
   getItems(): CodeFragmentEntity[] {

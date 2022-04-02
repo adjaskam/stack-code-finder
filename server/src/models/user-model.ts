@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 import bcrypt from "bcrypt";
-import DatabaseError from "../error/DatabaseError";
+import DatabaseError from "../errors/DatabaseError";
 
 export interface UserEntity {
   email: string;

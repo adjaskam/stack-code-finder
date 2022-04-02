@@ -4,35 +4,39 @@ import {
   deleteAllCodeFragments,
   findAllCodeFragmentsBySearchPhrase,
   findAllCodeFragments,
-} from "../service/codeFragmentService";
+} from "../services/code-fragment-service";
 import { fetchQuestionsFromStackAPI } from "../api";
 import CodeFragment, {
   CodeFragmentDocument,
   CodeFragmentEntity,
-} from "../model/codeFragmentModel";
-import log from "../logger";
-import { scrapCodeFragment } from "../converter/codeFragmentScrapper";
+} from "../models/code-fragment-model";
+import log from "../loggers";
+import PuppeteerScraper from "../scrapers/PuppeteerScraper";
 import config from "config";
 import {
   getCodeBlocksContainsPhrase,
   getInternalQuestionsList,
-} from "../converter/questionsConverter";
+} from "../scrapers/questions-converter";
 import hash from "object-hash";
-import { _FetchedQuestionsList } from "./types/codeFragmentTypes";
-import { TaggedFragmentDto } from "../dto/TaggedFragmentDto";
-import { CodeFragmentsListDto } from "../dto/CodeFragmentsListDto";
-import ApiError from "../error/ApiError";
+import { _FetchedQuestionsList } from "./types/code-fragment-types";
+import { TaggedFragmentDto } from "../dtos/TaggedFragmentDto";
+import { CodeFragmentsListDto } from "../dtos/CodeFragmentsListDto";
+import ApiError from "../errors/ApiError";
+import CheerioScraper from "../scrapers/CheerioScraper";
+import { AppScraperInterface } from "../scrapers/AppScraperInterface";
 
 const codeFragmentsFetchLimit = config.get("codeFragmentsFetchLimit") as number;
-
-let page = 0;
+const FIND_BY_HTML_ELEMENT = "code" as string;
+const SEARCH_XPATH = "//pre[contains(@class, 's-code-block')]" as string;
 
 export async function fetchCodeFragmentsHandler(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
+  let page = 0;
   try {
+    const start = new Date().getTime();
     log.info(req.user?.id);
     let isRequestCancelledByClient = false;
 
@@ -48,6 +52,13 @@ export async function fetchCodeFragmentsHandler(
       req.body.searchPhrase,
       req.body.amount
     );
+
+    let scrapper: AppScraperInterface = new CheerioScraper(
+      FIND_BY_HTML_ELEMENT
+    );
+    if (req.body.scraperType === "puppeteer") {
+      scrapper = new PuppeteerScraper(SEARCH_XPATH);
+    }
 
     if (taggedFragmentDto.getAmount() > codeFragmentsFetchLimit) {
       throw ApiError.badRequest(
@@ -71,7 +82,7 @@ export async function fetchCodeFragmentsHandler(
           }
           let scrappedCodeFragment: string[] = [];
           try {
-            scrappedCodeFragment = await scrapCodeFragment(item.link);
+            scrappedCodeFragment = await scrapper.scrapCodeFragment(item.link);
           } catch (error) {
             log.error(error.message);
           }
@@ -112,9 +123,12 @@ export async function fetchCodeFragmentsHandler(
               if (
                 managedCodeFragments.length == taggedFragmentDto.getAmount()
               ) {
+                const end = new Date().getTime();
+                const time = end - start;
                 const codeFragmentsListDto = new CodeFragmentsListDto(
                   managedCodeFragments,
-                  managedCodeFragments.length
+                  managedCodeFragments.length,
+                  time
                 );
                 return res.send(codeFragmentsListDto);
               }
@@ -124,9 +138,6 @@ export async function fetchCodeFragmentsHandler(
       }
     } while (managedCodeFragments.length < taggedFragmentDto.getAmount());
   } catch (error) {
-    if (error instanceof ApiError) {
-      console.log("xd");
-    }
     next(error);
   }
 }

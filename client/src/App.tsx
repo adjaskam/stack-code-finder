@@ -32,15 +32,20 @@ const InputControlCol = styled(Col)`
 
 function App() {
   const dispatch = useDispatch();
-  const { setSearchPhrase, setTag, fetchCodeFragments, removeCancelToken } =
-    bindActionCreators(actionCreators, dispatch);
+  const {
+    setSearchPhrase,
+    setTag,
+    fetchCodeFragments,
+    removeCancelToken,
+    setScraperType,
+  } = bindActionCreators(actionCreators, dispatch);
 
   const state = useSelector((state: State) => state.codeFragment);
   return (
     <RootContainer>
       <Container className="mt-3">
         <Row className="g-1">
-          <Col lg={10}>
+          <Col lg={7}>
             <FloatingLabel controlId="floatingInput" label="Search code phrase">
               <FormControl
                 as="textarea"
@@ -50,7 +55,7 @@ function App() {
               />
             </FloatingLabel>
           </Col>
-          <InputControlCol lg={1}>
+          <InputControlCol lg={2}>
             <Form.Select
               className="text-center"
               onChange={(ev: React.BaseSyntheticEvent) => {
@@ -62,13 +67,24 @@ function App() {
               <option value="Golang">Golang</option>
             </Form.Select>
           </InputControlCol>
+          <InputControlCol lg={2}>
+            <Form.Select
+              className="text-center"
+              onChange={(ev: React.BaseSyntheticEvent) => {
+                setScraperType(ev.target.value);
+              }}
+            >
+              <option value="cheerio">cheerio</option>
+              <option value="puppeteer">puppeteer</option>
+            </Form.Select>
+          </InputControlCol>
           <InputControlCol lg={1}>
             <Button onClick={fetchCodeFragments}>Fetch</Button>
           </InputControlCol>
         </Row>
       </Container>
       <Container fluid>
-        <Row className="d-flex justify-content-center mt-3">
+        <Row className="d-flex justify-content-center mt-5">
           {state.isLoading && (
             <div className="text-center">
               <Spinner animation="border" variant="dark" className="mb-3" />
@@ -81,13 +97,29 @@ function App() {
                   }
                   return removeCancelToken();
                 }}
-              >Cancel request</Button>
+              >
+                Cancel request
+              </Button>
             </div>
           )}
           <Accordion className="my-3">
+            {state.codeFragments?.length > 0 && (
+              <p className="text-center">
+                {" "}
+                To view related Stackoverflow thread click on Question ID in
+                item header
+              </p>
+            )}
             {state.codeFragments?.map((item, index) => (
               <Accordion.Item eventKey={index.toString()}>
-                <Accordion.Header>{item.hashMessage}</Accordion.Header>
+                <Accordion.Header>
+                  <a
+                    target="_blank"
+                    href={`https://stackoverflow.com/questions/${item.questionId}`}
+                  >
+                    {item.questionId}
+                  </a>
+                </Accordion.Header>
                 <Accordion.Body>
                   <CodeBlock
                     text={item.codeFragment}
@@ -99,6 +131,9 @@ function App() {
             ))}
           </Accordion>
         </Row>
+        {state.executionTime && (
+          <p>Execution time: {(state.executionTime / 1000).toFixed(2)} s </p>
+        )}
       </Container>
     </RootContainer>
   );

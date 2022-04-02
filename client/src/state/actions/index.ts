@@ -26,9 +26,26 @@ interface SetAbortTokenFetchCodeFragmentsAction {
   payload: CancelTokenSource | undefined;
 }
 
+interface SetScraperTypeAction {
+  type: ActionType.SET_SCRAPER_TYPE;
+  payload: string;
+}
+
+interface SetExecutionTimeAction {
+  type: ActionType.SET_EXECUTION_TIME;
+  payload: number;
+}
+
+interface ClearDataAction {
+  type: ActionType.CLEAR_DATA;
+}
+
 export type Action =
   | SetSearchPhraseAction
   | SetTagAction
   | SetLoadingAction
   | FetchCodeFragmentsAction
-  | SetAbortTokenFetchCodeFragmentsAction;
+  | SetAbortTokenFetchCodeFragmentsAction
+  | SetScraperTypeAction
+  | SetExecutionTimeAction
+  | ClearDataAction;

@@ -1,8 +1,8 @@
 import { check } from "express-validator";
 import { validationResult } from "express-validator";
 import { NextFunction, Response, Request } from "express";
-import ApiError from "../error/ApiError";
-import ValidationError, { ValidationResult } from "../error/ValidationError";
+import ApiError from "../errors/ApiError";
+import ValidationError, { ValidationResult } from "../errors/ValidationError";
 
 export function fetchCodeFragmentsValidationSchema() {
   return [
@@ -19,6 +19,10 @@ export function fetchCodeFragmentsValidationSchema() {
         "searchPhrase must be a valid string with minimal length of 3 digits"
       ),
     check("amount").trim().isNumeric().withMessage("amount must be numeric."),
+    check("scraperType")
+      .trim()
+      .isIn(["puppeteer", "cheerio"])
+      .withMessage("scrapperType should be one of: [puppeteer, cheerio]"),
   ];
 }
 

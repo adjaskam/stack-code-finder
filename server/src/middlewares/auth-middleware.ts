@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import config from "config";
-import ApiError from "../error/ApiError";
+import ApiError from "../errors/ApiError";
 
 const tokenSecret = config.get("tokenSecret") as string;
 

@@ -4,19 +4,19 @@ import {
   getAllCodeFragmentsBySearchPhraseHandler,
   getAllCodeFragmentsHandler,
   deleteAllCodeFragmentsHandler,
-} from "./controller/codeFragmentController";
+} from "./controllers/code-fragment-controller";
 
-import { handleApplicationError } from "./middleware/errorHandlerMiddleware";
+import { handleApplicationError } from "./middlewares/error-handler-middleware";
 import {
   registerUserHandler,
   loginUserHandler,
-} from "./controller/authController";
+} from "./controllers/auth-controller";
 import {
   credentialsValidationSchema,
   fetchCodeFragmentsValidationSchema,
   validate,
   fetchCodeFragmentsBySearchPhraseValidationSchema,
-} from "./middleware/validators";
+} from "./middlewares/validators";
 
 export default function (app: Express) {
   // auth routes

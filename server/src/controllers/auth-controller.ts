@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import config from "config";
 import jwt from "jsonwebtoken";
-import { createUser, loginUser } from "../service/authService";
+import { createUser, loginUser } from "../services/auth-service";
 
 const tokenSecret = config.get("tokenSecret") as string;
 

@@ -22,6 +22,15 @@ export const setTag = (tag: string) => {
   };
 };
 
+export const setScraperType = (scraperType: string) => {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.SET_SCRAPER_TYPE,
+      payload: scraperType,
+    });
+  };
+};
+
 export const removeCancelToken = () => {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
@@ -33,11 +42,15 @@ export const removeCancelToken = () => {
 
 export const fetchCodeFragments = () => {
   return async (dispatch: Dispatch<Action>, getState: () => State) => {
+    dispatch({
+      type: ActionType.CLEAR_DATA,
+    });
     const { codeFragment } = getState();
     const body = {
       searchPhrase: codeFragment.searchPhrase.trim(),
       tag: codeFragment.tag,
-      amount: 2,
+      amount: 1,
+      scraperType: codeFragment.scraperType,
     };
 
     dispatch({
@@ -59,6 +72,10 @@ export const fetchCodeFragments = () => {
       dispatch({
         type: ActionType.FETCH_CODE_FRAGMENTS,
         payload: apiResponse.data.items,
+      });
+      dispatch({
+        type: ActionType.SET_EXECUTION_TIME,
+        payload: apiResponse.data.executionTime,
       });
     } catch (error) {
     } finally {

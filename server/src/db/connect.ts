@@ -1,6 +1,6 @@
-import mongoose, { ConnectOptions } from "mongoose";
+import mongoose from "mongoose";
 import config from "config";
-import log from "../logger";
+import log from "../loggers";
 
 var promiseRetry = require("promise-retry");
 const dbUri = config.get("dbUri") as string;

@@ -13,17 +13,21 @@ export type CodeFragment = {
 type CodeFragmentState = {
   searchPhrase: string;
   tag: string;
+  scraperType: string;
   isLoading: boolean;
   codeFragments: CodeFragment[];
   abortToken: CancelTokenSource | undefined;
+  executionTime: number | undefined;
 };
 
 const initialState: CodeFragmentState = {
   searchPhrase: "",
   tag: "Java",
+  scraperType: "cheerio",
   isLoading: false,
   codeFragments: [],
-  abortToken: undefined
+  abortToken: undefined,
+  executionTime: undefined,
 };
 
 const reducer = (state: CodeFragmentState = initialState, action: Action) => {
@@ -53,6 +57,22 @@ const reducer = (state: CodeFragmentState = initialState, action: Action) => {
         ...state,
         abortToken: action.payload,
       };
+    case ActionType.SET_SCRAPER_TYPE:
+      return {
+        ...state,
+        scraperType: action.payload,
+      };
+    case ActionType.SET_EXECUTION_TIME:
+      return {
+        ...state,
+        executionTime: action.payload,
+      };
+      case ActionType.CLEAR_DATA:
+        return {
+          ...state,
+          codeFragments: [],
+          executionTime: undefined
+        };
     default:
       return state;
   }

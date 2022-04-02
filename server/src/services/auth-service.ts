@@ -1,5 +1,5 @@
-import User, { UserEntity } from "../model/userModel";
-import ApiError from "../error/ApiError";
+import User, { UserEntity } from "../models/user-model";
+import ApiError from "../errors/ApiError";
 
 export async function createUser(user: UserEntity): Promise<UserEntity | null> {
   try {

@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
-import ApiError from "./error/ApiError";
-import log from "./logger";
+import ApiError from "./errors/ApiError";
+import log from "./loggers";
 
 // This is not considered a secret, and may be safely embed in client side code or distributed binaries.
 const STACK_API_KEY = "1)QIB80MJ1mCrDp0MtRRiA((";
