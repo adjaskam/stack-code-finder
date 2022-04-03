@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const TEMP_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpYXQiOjE2NDg5MDA3MzAsImV4cCI6MTY0ODkwNDMzMH0.2tGmcDNVsHKMP4_uE2vff_j88BpuNQBhqdM9SQUvmOw";
+const TEMP_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImV4YW1wbGUxQGV4YW1wbGUuY29tIiwiaWF0IjoxNjQ4OTk4NzQ3LCJleHAiOjE2NDkwMDIzNDd9.inLOOdhtaVIScfSRJtDJXvOPKAuChyTUoRNgnSOFE54";
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {

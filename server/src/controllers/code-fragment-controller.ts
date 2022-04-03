@@ -5,6 +5,7 @@ import {
   findAllCodeFragmentsBySearchPhrase,
   findAllCodeFragments,
   findOneAndUpdateCodeFragment,
+  findAllCodeFragmentsByUser
 } from "../services/code-fragment-service";
 import { fetchQuestionsFromStackAPI } from "../api";
 import CodeFragment, {
@@ -205,7 +206,7 @@ export async function getAllCodeFragmentsForUserHandler(
     if (!userId) {
       throw ApiError.badRequest("CANNOT_FIND_USER_ID");
     }
-    const codeFragments = await findAllCodeFragmentsBySearchPhrase(userId);
+    const codeFragments = await findAllCodeFragmentsByUser(userId);
     const codeFragmentsListDto = new CodeFragmentsListDto(
       codeFragments,
       codeFragments.length

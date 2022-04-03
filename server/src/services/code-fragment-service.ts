@@ -41,7 +41,7 @@ export async function findAllCodeFragmentsBySearchPhrase(
 ): Promise<CodeFragmentEntity[]> {
   try {
     return await CodeFragment.find({
-      searchPhrase: { $contains: searchPhrase },
+      searchPhrase: searchPhrase,
     });
   } catch (error) {
     throw ApiError.badRequest(error.message);
@@ -60,7 +60,7 @@ export async function findAllCodeFragmentsByUser(
   userId: string
 ): Promise<CodeFragmentEntity[]> {
   try {
-    return await CodeFragment.find({ usersOwn: userId });
+    return await CodeFragment.find({ usersOwn: { $in: [userId] } });
   } catch (error) {
     throw ApiError.badRequest(error.message);
   }

@@ -22,7 +22,6 @@ import { checkUserAuthStatus } from "./middlewares/auth-middleware";
 
 export default function (app: Express) {
   // auth routes
-  app.use(checkUserAuthStatus);
   app.post(
     "/api/register",
     credentialsValidationSchema(),

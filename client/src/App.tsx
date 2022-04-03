@@ -38,13 +38,14 @@ function App() {
     fetchCodeFragments,
     removeCancelToken,
     setScraperType,
+    fetchAllOwnCodeFragments,
   } = bindActionCreators(actionCreators, dispatch);
 
   const state = useSelector((state: State) => state.codeFragment);
   return (
     <RootContainer>
       <Container className="mt-3">
-        <Row className="g-1">
+        <Row className="g-1 mb-3">
           <Col lg={7}>
             <FloatingLabel controlId="floatingInput" label="Search code phrase">
               <FormControl
@@ -82,6 +83,9 @@ function App() {
             <Button onClick={fetchCodeFragments}>Fetch</Button>
           </InputControlCol>
         </Row>
+        <Button onClick={fetchAllOwnCodeFragments}>
+          Show my code fragments
+        </Button>
       </Container>
       <Container fluid>
         <Row className="d-flex justify-content-center mt-5">

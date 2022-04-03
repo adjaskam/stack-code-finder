@@ -25,10 +25,17 @@ Authorization: Bearer {{token}}
 {
    "tag": "Java",
    "searchPhrase": "int",
-   "amount": 2
+   "amount": 2,
+   "scraperType": "cheerio"
 }
 
-### Endpoint -> Delet all code fragments
+### Endpoint -> Fetch code fragments
+@token = JWT_TOKEN
+GET http://localhost/api/codefragments
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Endpoint -> Delete all code fragments
 @token = JWT_TOKEN
 DELETE http://localhost/api/codefragments
 content-type: application/json

@@ -89,3 +89,28 @@ export const fetchCodeFragments = () => {
     }
   };
 };
+
+export const fetchAllOwnCodeFragments = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.CLEAR_DATA,
+    });
+    dispatch({
+      type: ActionType.SET_LOADING,
+    });
+
+    try {
+      // fetch code fragments from backend API
+      const apiResponse = await axios.get("/codefragments/my");
+      dispatch({
+        type: ActionType.FETCH_CODE_FRAGMENTS,
+        payload: apiResponse.data.items,
+      });
+    } catch (error) {
+    } finally {
+      dispatch({
+        type: ActionType.SET_LOADING,
+      });
+    }
+  };
+};
