@@ -1,13 +1,19 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { State } from "../state";
+import { useSelector } from "react-redux";
 
-const TEMP_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImV4YW1wbGUxQGV4YW1wbGUuY29tIiwiaWF0IjoxNjQ4OTk4NzQ3LCJleHAiOjE2NDkwMDIzNDd9.inLOOdhtaVIScfSRJtDJXvOPKAuChyTUoRNgnSOFE54";
+
+// @todo
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
+    const session = useSelector((state: State) => state.userSession);
+
     if (!config.headers) {
       config.headers = {};
     }
-    config.headers.Authorization = `Bearer ${TEMP_TOKEN}`;
+    console.log(session.jwtToken)
+    config.headers.Authorization = `Bearer ${session.jwtToken}`;
     config.baseURL = "http://localhost/api";
 
     return config;
@@ -23,5 +29,5 @@ export default {
   put: axios.put,
   delete: axios.delete,
   patch: axios.patch,
-  CancelToken: axios.CancelToken
+  CancelToken: axios.CancelToken,
 };

@@ -40,6 +40,15 @@ interface ClearDataAction {
   type: ActionType.CLEAR_DATA;
 }
 
+interface LoginAction {
+  type: ActionType.LOGIN;
+  payload: string;
+}
+
+interface LogoutAction {
+  type: ActionType.LOGOUT;
+}
+
 export type Action =
   | SetSearchPhraseAction
   | SetTagAction
@@ -48,4 +57,6 @@ export type Action =
   | SetAbortTokenFetchCodeFragmentsAction
   | SetScraperTypeAction
   | SetExecutionTimeAction
-  | ClearDataAction;
+  | ClearDataAction
+  | LoginAction
+  | LogoutAction;
