@@ -1,5 +1,5 @@
 import { CancelTokenSource } from "axios";
-import { ActionType } from "../action-types/index";
+import { CodeFragmentsActionType as ActionType } from "../action-types/codeFragmentsActionTypes";
 import { CodeFragment } from "../reducers/codeFragmentReducer";
 
 interface SetSearchPhraseAction {
@@ -40,7 +40,7 @@ interface ClearDataAction {
   type: ActionType.CLEAR_DATA;
 }
 
-export type Action =
+export type CodeFragmentsAction =
   | SetSearchPhraseAction
   | SetTagAction
   | SetLoadingAction

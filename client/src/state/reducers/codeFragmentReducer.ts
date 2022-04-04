@@ -1,5 +1,5 @@
-import { Action } from "../actions";
-import { ActionType } from "../action-types";
+import { CodeFragmentsAction } from "../actions/codeFragmentsActions";
+import { CodeFragmentsActionType as ActionType } from "../action-types/codeFragmentsActionTypes";
 import { CancelTokenSource } from "axios";
 
 export type CodeFragment = {
@@ -30,7 +30,7 @@ const initialState: CodeFragmentState = {
   executionTime: undefined,
 };
 
-const reducer = (state: CodeFragmentState = initialState, action: Action) => {
+const reducer = (state: CodeFragmentState = initialState, action: CodeFragmentsAction) => {
   switch (action.type) {
     case ActionType.SET_SEARCH_PHRASE:
       return {

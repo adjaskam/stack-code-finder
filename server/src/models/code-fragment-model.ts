@@ -5,6 +5,7 @@ export interface CodeFragmentEntity {
   searchPhrase: string;
   codeFragment: string;
   hashMessage: string;
+  usersOwn: string[];
 }
 export interface CodeFragmentDocument extends CodeFragmentEntity, Document {
   createdAt: Date;
@@ -27,6 +28,10 @@ const CodeFragmentSchema = new Schema(
       type: String,
       required: [true, "HashMessage is required"],
       unique: true,
+    },
+    usersOwn: {
+      type: [String],
+      required: [true, "UsersOwn is required"]
     },
   },
   { timestamps: true }

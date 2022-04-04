@@ -1,14 +1,21 @@
 import axios, { AxiosRequestConfig } from "axios";
-
-const TEMP_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpYXQiOjE2NDg3MjQ0MzUsImV4cCI6MTY0ODcyODAzNX0.NrJOhgBX8MTqY5xnTu3rZadzFnV_S7VOYHOByOU-om0";
+import { UserSessionStateInterface } from "../state/reducers/reducers";
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     if (!config.headers) {
       config.headers = {};
     }
-    config.headers.Authorization = `Bearer ${TEMP_TOKEN}`;
     config.baseURL = "http://localhost/api";
+
+    const sessionObject = localStorage.getItem("session");
+    if (sessionObject) {
+      const parsedSessionObject: UserSessionStateInterface =
+        JSON.parse(sessionObject);
+
+        // add expiration validation based on parsedSessionObject.exp
+      config.headers.Authorization = `Bearer ${parsedSessionObject.jwtToken}`;
+    }
 
     return config;
   },
@@ -23,5 +30,5 @@ export default {
   put: axios.put,
   delete: axios.delete,
   patch: axios.patch,
-  CancelToken: axios.CancelToken
+  CancelToken: axios.CancelToken,
 };

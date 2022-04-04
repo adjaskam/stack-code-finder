@@ -4,6 +4,7 @@ import {
   getAllCodeFragmentsBySearchPhraseHandler,
   getAllCodeFragmentsHandler,
   deleteAllCodeFragmentsHandler,
+  getAllCodeFragmentsForUserHandler
 } from "./controllers/code-fragment-controller";
 
 import { handleApplicationError } from "./middlewares/error-handler-middleware";
@@ -17,6 +18,7 @@ import {
   validate,
   fetchCodeFragmentsBySearchPhraseValidationSchema,
 } from "./middlewares/validators";
+import { checkUserAuthStatus } from "./middlewares/auth-middleware";
 
 export default function (app: Express) {
   // auth routes
@@ -38,7 +40,13 @@ export default function (app: Express) {
     "/api/codefragments",
     fetchCodeFragmentsValidationSchema(),
     validate,
+    checkUserAuthStatus,
     fetchCodeFragmentsHandler
+  );
+  app.get(
+    "/api/codefragments/my",
+    checkUserAuthStatus,
+    getAllCodeFragmentsForUserHandler
   );
   app.get(
     "/api/codefragments/:searchPhrase",
@@ -48,6 +56,5 @@ export default function (app: Express) {
   );
   app.get("/api/codefragments", getAllCodeFragmentsHandler);
   app.delete("/api/codefragments", deleteAllCodeFragmentsHandler);
-  
   app.use(handleApplicationError);
 }

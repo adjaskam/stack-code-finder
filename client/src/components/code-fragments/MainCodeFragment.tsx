@@ -1,6 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import { actionCreators, State } from "./state";
+import {
+  codeFragmentsActionCreators,
+  userSessionActionCreators,
+  State,
+} from "../../state";
 import {
   Accordion,
   FloatingLabel,
@@ -15,22 +19,12 @@ import {
 import styled from "styled-components";
 import { CodeBlock, dracula } from "react-code-blocks";
 
-const RootContainer = styled.div`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: #bdc1c6;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-`;
-
 const InputControlCol = styled(Col)`
   max-height: 58px;
   display: flex;
 `;
 
-function App() {
+const MainCodeFragment = () => {
   const dispatch = useDispatch();
   const {
     setSearchPhrase,
@@ -38,13 +32,26 @@ function App() {
     fetchCodeFragments,
     removeCancelToken,
     setScraperType,
-  } = bindActionCreators(actionCreators, dispatch);
+    fetchAllOwnCodeFragments,
+  } = bindActionCreators(codeFragmentsActionCreators, dispatch);
+  
+  const { logoutUser } = bindActionCreators(
+    userSessionActionCreators,
+    dispatch
+  );
 
   const state = useSelector((state: State) => state.codeFragment);
   return (
-    <RootContainer>
+    <>
       <Container className="mt-3">
-        <Row className="g-1">
+        <Row className="d-flex justify-content-end mb-3">
+          <Col lg={1}>
+            <Button variant="link" onClick={logoutUser}>
+              Logout
+            </Button>
+          </Col>
+        </Row>
+        <Row className="g-1 mb-3">
           <Col lg={7}>
             <FloatingLabel controlId="floatingInput" label="Search code phrase">
               <FormControl
@@ -82,6 +89,9 @@ function App() {
             <Button onClick={fetchCodeFragments}>Fetch</Button>
           </InputControlCol>
         </Row>
+        <Button onClick={fetchAllOwnCodeFragments}>
+          Show my code fragments
+        </Button>
       </Container>
       <Container fluid>
         <Row className="d-flex justify-content-center mt-5">
@@ -93,7 +103,6 @@ function App() {
                 onClick={(e) => {
                   if (state.abortToken) {
                     state.abortToken.cancel();
-                    console.log("xxx");
                   }
                   return removeCancelToken();
                 }}
@@ -105,7 +114,6 @@ function App() {
           <Accordion className="my-3">
             {state.codeFragments?.length > 0 && (
               <p className="text-center">
-                {" "}
                 To view related Stackoverflow thread click on Question ID in
                 item header
               </p>
@@ -135,8 +143,8 @@ function App() {
           <p>Execution time: {(state.executionTime / 1000).toFixed(2)} s </p>
         )}
       </Container>
-    </RootContainer>
+    </>
   );
-}
+};
 
-export default App;
+export default MainCodeFragment;

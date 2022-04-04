@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
-import { ActionType } from "../action-types";
-import { Action } from "../actions";
+import { CodeFragmentsActionType as ActionType } from "../action-types/codeFragmentsActionTypes";
+import { CodeFragmentsAction as Action } from "../actions/codeFragmentsActions";
 import { State } from "../index";
 import axios from "../../api/axiosInstance";
 
@@ -85,6 +85,31 @@ export const fetchCodeFragments = () => {
       dispatch({
         type: ActionType.SET_ABORT_TOKEN_FETCH_CODE_FRAGMENTS,
         payload: undefined,
+      });
+    }
+  };
+};
+
+export const fetchAllOwnCodeFragments = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.CLEAR_DATA,
+    });
+    dispatch({
+      type: ActionType.SET_LOADING,
+    });
+
+    try {
+      // fetch code fragments from backend API
+      const apiResponse = await axios.get("/codefragments/my");
+      dispatch({
+        type: ActionType.FETCH_CODE_FRAGMENTS,
+        payload: apiResponse.data.items,
+      });
+    } catch (error) {
+    } finally {
+      dispatch({
+        type: ActionType.SET_LOADING,
       });
     }
   };
