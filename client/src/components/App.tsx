@@ -1,4 +1,4 @@
-import CustomRoutes from "./components/routes/CustomRoutes";
+import CustomRoutes from "./routes/CustomRoutes";
 import styled from "styled-components";
 
 const RootContainer = styled.div`

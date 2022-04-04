@@ -1,4 +1,4 @@
-import MainCodeFragment from "../MainCodeFragment";
+import MainCodeFragment from "../code-fragments/MainCodeFragment";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { NotAuthorizedOnlyRoute, RequiredAuthRoute } from "./RequiredAuth";
 import Entry from "../auth/Entry";
