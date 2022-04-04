@@ -2,14 +2,14 @@ import { useDispatch } from "react-redux";
 import { Container, Tabs, Tab } from "react-bootstrap";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
-import { actionCreators } from "../../state";
+import { userSessionActionCreators } from "../../state";
 import { bindActionCreators } from "redux";
 import { UserCredentialsInterface } from "./types/auth";
 import axios from "../../api/axiosInstance";
 
 const Entry = () => {
   const dispatch = useDispatch();
-  const { loginUser } = bindActionCreators(actionCreators, dispatch);
+  const { loginUser } = bindActionCreators(userSessionActionCreators, dispatch);
 
   // no need to proceed with any state
   const registerUser = async (credentials: UserCredentialsInterface) => {

@@ -1,6 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import { actionCreators, State } from "../state";
+import {
+  codeFragmentsActionCreators,
+  userSessionActionCreators,
+  State,
+} from "../state";
 import {
   Accordion,
   FloatingLabel,
@@ -29,8 +33,12 @@ const MainCodeFragment = () => {
     removeCancelToken,
     setScraperType,
     fetchAllOwnCodeFragments,
-    logoutUser,
-  } = bindActionCreators(actionCreators, dispatch);
+  } = bindActionCreators(codeFragmentsActionCreators, dispatch);
+  
+  const { logoutUser } = bindActionCreators(
+    userSessionActionCreators,
+    dispatch
+  );
 
   const state = useSelector((state: State) => state.codeFragment);
   return (
@@ -38,7 +46,9 @@ const MainCodeFragment = () => {
       <Container className="mt-3">
         <Row className="d-flex justify-content-end mb-3">
           <Col lg={1}>
-            <Button variant="link" onClick={logoutUser}>Logout</Button>
+            <Button variant="link" onClick={logoutUser}>
+              Logout
+            </Button>
           </Col>
         </Row>
         <Row className="g-1 mb-3">

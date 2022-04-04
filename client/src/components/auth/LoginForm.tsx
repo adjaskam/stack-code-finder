@@ -16,8 +16,8 @@ const LoginForm = ({ submitText, submitCallback }: AuthFormPropsInterface) => {
         return submitCallback(values as UserCredentialsInterface);
       }}
     >
-      {({ handleSubmit, handleChange, values, touched, errors }) => (
-        <Form onSubmit={handleSubmit}>
+      {({ handleChange, values, touched, errors }) => (
+        <Form>
           <CustomFormField
             name="Email"
             valueType="email"

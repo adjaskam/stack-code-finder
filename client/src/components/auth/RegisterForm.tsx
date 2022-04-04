@@ -27,7 +27,7 @@ const RegisterForm = ({
         return navigate("/");
       }}
     >
-      {({ handleSubmit, handleChange, values, touched, errors }) => (
+      {({ handleChange, values, touched, errors }) => (
         <Form>
           <CustomFormField
             name="Email"

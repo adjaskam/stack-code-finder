@@ -1,9 +1,8 @@
 import { Dispatch } from "redux";
-import { ActionType } from "../action-types";
-import { Action } from "../actions";
+import { CodeFragmentsActionType as ActionType } from "../action-types/codeFragmentsActionTypes";
+import { CodeFragmentsAction as Action } from "../actions/codeFragmentsActions";
 import { State } from "../index";
 import axios from "../../api/axiosInstance";
-import { UserCredentialsInterface } from "../../components/auth/types/auth";
 
 export const setSearchPhrase = (searchPhrase: string) => {
   return (dispatch: Dispatch<Action>) => {
@@ -113,30 +112,5 @@ export const fetchAllOwnCodeFragments = () => {
         type: ActionType.SET_LOADING,
       });
     }
-  };
-};
-
-export const loginUser = ({ email, password }: UserCredentialsInterface) => {
-  return async (dispatch: Dispatch<Action>, getState: () => State) => {
-    try {
-      const apiResponse = await axios.post("/login", {
-        email: email,
-        password: password,
-      });
-      localStorage.setItem("jwtToken", apiResponse.data);
-      dispatch({
-        type: ActionType.LOGIN,
-        payload: apiResponse.data,
-      });
-    } catch (error) {}
-  };
-};
-
-export const logoutUser = () => {
-  return (dispatch: Dispatch<Action>) => {
-    localStorage.removeItem("jwtToken");
-    dispatch({
-      type: ActionType.LOGOUT,
-    });
   };
 };

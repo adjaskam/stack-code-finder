@@ -1,4 +1,4 @@
-export enum ActionType {
+export enum CodeFragmentsActionType {
     // Code fragment
     SET_SEARCH_PHRASE = "set_search_phrase",
     SET_TAG = "set_tag",
@@ -8,8 +8,4 @@ export enum ActionType {
     SET_SCRAPER_TYPE = "set_scraper_type",
     SET_EXECUTION_TIME = "set_execution_time",
     CLEAR_DATA = "clear_data",
-
-    // User session
-    LOGIN="login",
-    LOGOUT="logout",
 }
