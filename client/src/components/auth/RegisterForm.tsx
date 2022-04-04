@@ -2,12 +2,14 @@ import { AuthFormPropsInterface, UserCredentialsInterface } from "./types/auth";
 import CustomFormField from "./CustomFormField";
 import { RegisterSchema } from "./validation/AuthValidationSchema";
 import { Formik, Form } from "formik";
+import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
 const RegisterForm = ({
   submitText,
   submitCallback,
 }: AuthFormPropsInterface) => {
+  const navigate = useNavigate();
   return (
     <Formik
       initialValues={{
@@ -16,12 +18,14 @@ const RegisterForm = ({
         repeatedPassword: "",
       }}
       validationSchema={RegisterSchema}
-      onSubmit={(values) =>
-        submitCallback({
+      onSubmit={async (values) => {
+        await submitCallback({
           email: values.email,
           password: values.password,
-        } as UserCredentialsInterface)
-      }
+        } as UserCredentialsInterface);
+
+        return navigate("/");
+      }}
     >
       {({ handleSubmit, handleChange, values, touched, errors }) => (
         <Form>
@@ -52,7 +56,7 @@ const RegisterForm = ({
             touched={touched.repeatedPassword}
             error={errors.repeatedPassword}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{submitText}</Button>
         </Form>
       )}
     </Formik>
