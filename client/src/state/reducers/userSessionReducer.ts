@@ -1,23 +1,23 @@
 import { UserSessionAction } from "../actions/userSessionActions";
 import { UserSessionActionType as ActionType } from "../action-types/userSessionActionTypes";
+import jwtDecode from "jwt-decode";
+import { UserSessionStateInterface, JwtDecodedInterface } from "./reducers";
 
-type UserSessionState = {
-  jwtToken: string | undefined;
-};
-
-const initialState: UserSessionState = {
-  jwtToken: localStorage.getItem("jwtToken") || undefined,
+const initialState: UserSessionStateInterface = {
+  jwtToken: undefined,
+  userEmail: undefined,
+  exp: undefined,
 };
 
 const reducer = (
-  state: UserSessionState = initialState,
+  state: UserSessionStateInterface = initialState,
   action: UserSessionAction
 ) => {
   switch (action.type) {
     case ActionType.LOGIN:
       return {
         ...state,
-        jwtToken: action.payload,
+        ...action.payload,
       };
     case ActionType.LOGOUT:
       return {

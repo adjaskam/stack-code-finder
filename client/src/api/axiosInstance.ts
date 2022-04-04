@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { UserSessionStateInterface } from "../state/reducers/reducers";
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
@@ -7,10 +8,13 @@ axios.interceptors.request.use(
     }
     config.baseURL = "http://localhost/api";
 
-    // add expiration validation
-    const jwtToken = localStorage.getItem("jwtToken");
-    if (jwtToken) {
-      config.headers.Authorization = `Bearer ${jwtToken}`;
+    const sessionObject = localStorage.getItem("session");
+    if (sessionObject) {
+      const parsedSessionObject: UserSessionStateInterface =
+        JSON.parse(sessionObject);
+
+        // add expiration validation based on parsedSessionObject.exp
+      config.headers.Authorization = `Bearer ${parsedSessionObject.jwtToken}`;
     }
 
     return config;
