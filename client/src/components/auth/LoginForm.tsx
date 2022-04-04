@@ -13,7 +13,6 @@ const LoginForm = ({ submitText, submitCallback }: AuthFormPropsInterface) => {
       }}
       validationSchema={LoginSchema}
       onSubmit={(values) => {
-        console.log(values)
         return submitCallback(values as UserCredentialsInterface);
       }}
     >

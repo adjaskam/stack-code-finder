@@ -1,16 +1,17 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-
-// @todo
-
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-
     if (!config.headers) {
       config.headers = {};
     }
-    config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImV4YW1wbGUxQGV4YW1wbGUuY29tIiwiaWF0IjoxNjQ5MDkxOTYzLCJleHAiOjE2NDkwOTU1NjN9.ZGHfiUcn_HsB6xuF0_0vVsMorQJrSUSmAmyIFeJbP8Q`;
     config.baseURL = "http://localhost/api";
+
+    // add expiration validation
+    const jwtToken = localStorage.getItem("jwtToken");
+    if (jwtToken) {
+      config.headers.Authorization = `Bearer ${jwtToken}`;
+    }
 
     return config;
   },
