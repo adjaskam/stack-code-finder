@@ -1,19 +1,15 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { State } from "../state";
-import { useSelector } from "react-redux";
 
 
 // @todo
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    const session = useSelector((state: State) => state.userSession);
 
     if (!config.headers) {
       config.headers = {};
     }
-    console.log(session.jwtToken)
-    config.headers.Authorization = `Bearer ${session.jwtToken}`;
+    config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImV4YW1wbGUxQGV4YW1wbGUuY29tIiwiaWF0IjoxNjQ5MDkxOTYzLCJleHAiOjE2NDkwOTU1NjN9.ZGHfiUcn_HsB6xuF0_0vVsMorQJrSUSmAmyIFeJbP8Q`;
     config.baseURL = "http://localhost/api";
 
     return config;

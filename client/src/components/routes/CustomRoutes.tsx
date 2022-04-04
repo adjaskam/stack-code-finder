@@ -1,7 +1,7 @@
 import MainCodeFragment from "../MainCodeFragment";
-import Login from "../auth/Login";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { NotAuthorizedOnlyRoute, RequiredAuthRoute } from "./RequiredAuth";
+import Entry from "../auth/Entry";
 
 const CustomRoutes = () => {
   return (
@@ -18,7 +18,7 @@ const CustomRoutes = () => {
         path="/entry"
         element={
           <NotAuthorizedOnlyRoute>
-            <Login />
+            <Entry />
           </NotAuthorizedOnlyRoute>
         }
       />

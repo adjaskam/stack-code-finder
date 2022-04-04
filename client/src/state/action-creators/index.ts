@@ -3,7 +3,7 @@ import { ActionType } from "../action-types";
 import { Action } from "../actions";
 import { State } from "../index";
 import axios from "../../api/axiosInstance";
-import { UserCredentialsInterface } from "../../components/auth/AuthForm";
+import { UserCredentialsInterface } from "../../components/auth/types/auth";
 
 export const setSearchPhrase = (searchPhrase: string) => {
   return (dispatch: Dispatch<Action>) => {
