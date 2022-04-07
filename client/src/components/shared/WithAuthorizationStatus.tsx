@@ -8,7 +8,6 @@ export enum Auth {
   Required = "Required",
 }
 
-
 export const WithAuthorizationStatus = ({
   children,
   auth,

@@ -1,4 +1,4 @@
-import CodeFragmentsContainer from "../code-fragments/CodeFragmentsContainer";
+import CodeFragmentsContainer from "../codefragments/CodeFragmentsContainer";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { WithAuthorizationStatus } from "../shared/WithAuthorizationStatus";
 import LoginContainer from "../auth/LoginContainer";

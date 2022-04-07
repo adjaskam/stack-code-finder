@@ -3,6 +3,10 @@ import { CodeFragmentsActionType as ActionType } from "../action-types/codeFragm
 import { CodeFragmentsAction as Action } from "../actions/codeFragmentsActions";
 import { State } from "../index";
 import axios from "../../api/axiosInstance";
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
 
 export const setSearchPhrase = (searchPhrase: string) => {
   return (dispatch: Dispatch<Action>) => {
@@ -86,7 +90,8 @@ export const fetchCodeFragments = () => {
         type: ActionType.SET_EXECUTION_TIME,
         payload: apiResponse.data.executionTime,
       });
-    } catch (error) {
+    } catch (error: any) {
+      NotificationManager.warning(JSON.stringify(error.response.data), "Code fragment error", 3500);
     } finally {
       dispatch({
         type: ActionType.SET_LOADING,
@@ -115,7 +120,8 @@ export const fetchAllOwnCodeFragments = () => {
         type: ActionType.FETCH_CODE_FRAGMENTS,
         payload: apiResponse.data.items,
       });
-    } catch (error) {
+    } catch (error: any) {
+      NotificationManager.warning(JSON.stringify(error.response.data), "Code fragment error", 3500);
     } finally {
       dispatch({
         type: ActionType.SET_LOADING,

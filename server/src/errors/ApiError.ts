@@ -3,6 +3,7 @@ class ApiError extends Error {
   constructor(message: string, code: number) {
     super(message);
     this.code = code;
+    Object.setPrototypeOf(this, ApiError.prototype);
   }
 
   static badRequest(message: string): ApiError {

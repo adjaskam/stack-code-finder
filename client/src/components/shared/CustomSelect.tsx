@@ -2,7 +2,7 @@ import { Form, FloatingLabel } from "react-bootstrap";
 import {
   CustomSelectPropsInterface,
   SelectOption,
-} from "../code-fragments/types/codeFragments";
+} from "../codefragments/types/codeFragments";
 
 const CustomSelect = ({
   onChange,

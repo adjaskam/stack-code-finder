@@ -18,7 +18,13 @@ export function fetchCodeFragmentsValidationSchema() {
       .withMessage(
         "searchPhrase must be a valid string with minimal length of 3 digits"
       ),
-    check("amount").trim().isNumeric().withMessage("amount must be numeric."),
+    check("amount")
+      .trim()
+      .isInt({ min: 3, max: 10 })
+      .withMessage("Amount should be greater than 3 and lower than 10")
+      .bail()
+      .isNumeric()
+      .withMessage("amount must be numeric."),
     check("scraperType")
       .trim()
       .isIn(["puppeteer", "cheerio"])

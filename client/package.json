@@ -21,6 +21,7 @@
     "react-bootstrap": "^2.2.2",
     "react-code-blocks": "^0.0.9-0",
     "react-dom": "^17.0.2",
+    "react-notifications": "^1.7.3",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.0",
