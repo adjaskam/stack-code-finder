@@ -1,6 +1,6 @@
-import MainCodeFragment from "../code-fragments/MainCodeFragment";
+import CodeFragmentsContainer from "../code-fragments/CodeFragmentsContainer";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { NotAuthorizedOnlyRoute, RequiredAuthRoute } from "./RequiredAuth";
+import { NotAuthorizedOnlyRoute, RequiredAuthRoute } from "../shared/RequiredAuth";
 import Entry from "../auth/Entry";
 
 const CustomRoutes = () => {
@@ -10,7 +10,7 @@ const CustomRoutes = () => {
         path="/"
         element={
           <RequiredAuthRoute>
-            <MainCodeFragment />
+            <CodeFragmentsContainer />
           </RequiredAuthRoute>
         }
       />
