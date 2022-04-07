@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { Container, Tabs, Tab } from "react-bootstrap";
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
+import LoginForm from "./forms/LoginForm";
+import RegisterForm from "./forms/RegisterForm";
 import { userSessionActionCreators } from "../../state";
 import { bindActionCreators } from "redux";
 import { UserCredentialsInterface } from "./types/auth";

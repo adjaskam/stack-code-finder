@@ -1,5 +1,5 @@
-import { CustomGroupPropsInterface } from "./types/auth";
-import { FormControl, FormLabel, FormGroup, Button } from "react-bootstrap";
+import { CustomGroupPropsInterface } from "../auth/types/auth";
+import { FormControl, FormLabel, FormGroup } from "react-bootstrap";
 
 const CustomFormField = ({
   name,

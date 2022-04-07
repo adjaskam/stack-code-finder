@@ -1,12 +1,12 @@
-import CustomRoutes from "./routes/CustomRoutes";
-import Header from "./Header";
+import AppRoutes from "./routes/AppRoutes";
+import Header from "./shared/Header";
 import { Container } from "react-bootstrap";
 
 const App = () => {
   return (
     <Container fluid className="bg-light vh-100">
       <Header />
-      <CustomRoutes />
+      <AppRoutes />
     </Container>
   );
 };

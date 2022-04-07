@@ -1,9 +1,12 @@
 import CodeFragmentsContainer from "../code-fragments/CodeFragmentsContainer";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { NotAuthorizedOnlyRoute, RequiredAuthRoute } from "../shared/RequiredAuth";
-import Entry from "../auth/Entry";
+import {
+  NotAuthorizedOnlyRoute,
+  RequiredAuthRoute,
+} from "../shared/RequiredAuth";
+import LoginContainer from "../auth/LoginContainer";
 
-const CustomRoutes = () => {
+const AppRoutes = () => {
   return (
     <Routes>
       <Route
@@ -18,7 +21,7 @@ const CustomRoutes = () => {
         path="/entry"
         element={
           <NotAuthorizedOnlyRoute>
-            <Entry />
+            <LoginContainer />
           </NotAuthorizedOnlyRoute>
         }
       />
@@ -27,4 +30,4 @@ const CustomRoutes = () => {
   );
 };
 
-export default CustomRoutes;
+export default AppRoutes;

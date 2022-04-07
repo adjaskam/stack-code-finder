@@ -1,6 +1,6 @@
 import { Navbar, Container, Nav } from "react-bootstrap";
 import { bindActionCreators } from "redux";
-import { userSessionActionCreators, State } from "../state";
+import { userSessionActionCreators, State } from "../../state";
 import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {

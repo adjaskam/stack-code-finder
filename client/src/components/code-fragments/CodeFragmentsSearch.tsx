@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
-import { codeFragmentsActionCreators, State } from "../../state";
+import { codeFragmentsActionCreators } from "../../state";
 import CustomSelect from "../shared/CustomSelect";
 import {
   FloatingLabel,
@@ -10,7 +10,7 @@ import {
   Col,
   Button,
 } from "react-bootstrap";
-import { SelectOption } from "./types/codeFragments";
+import { SCRAPER_TYPES, TAGS } from "./constants";
 
 const CodeFragmentsSearch = () => {
   const dispatch = useDispatch();
@@ -37,13 +37,7 @@ const CodeFragmentsSearch = () => {
         </Col>
         <Col lg={2}>
           <CustomSelect
-            optionsList={
-              [
-                { value: "Java" },
-                { value: "Rust" },
-                { value: "Golang" },
-              ] as SelectOption[]
-            }
+            optionsList={TAGS}
             onChange={(ev: React.BaseSyntheticEvent) => {
               setTag(ev.target.value);
             }}
@@ -51,9 +45,7 @@ const CodeFragmentsSearch = () => {
         </Col>
         <Col lg={2}>
           <CustomSelect
-            optionsList={
-              [{ value: "cheerio" }, { value: "puppeteer" }] as SelectOption[]
-            }
+            optionsList={SCRAPER_TYPES}
             onChange={(ev: React.BaseSyntheticEvent) => {
               setScraperType(ev.target.value);
             }}
