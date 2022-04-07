@@ -1,6 +1,6 @@
 import { CancelTokenSource } from "axios";
 import { CodeFragmentsActionType as ActionType } from "../action-types/codeFragmentsActionTypes";
-import { CodeFragment } from "../reducers/codeFragmentReducer";
+import { CodeFragment } from "../reducers/types/reducers";
 
 interface SetSearchPhraseAction {
   type: ActionType.SET_SEARCH_PHRASE;

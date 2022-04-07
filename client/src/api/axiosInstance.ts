@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { UserSessionStateInterface } from "../state/reducers/reducers";
+import { UserSessionStateInterface } from "../state/reducers/types/reducers";
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {

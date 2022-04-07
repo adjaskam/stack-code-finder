@@ -4,16 +4,15 @@ import { CodeFragmentsActionType } from "../action-types/codeFragmentsActionType
 import { UserSessionAction as Action } from "../actions/userSessionActions";
 import { CodeFragmentsAction } from "../actions/codeFragmentsActions";
 import { UserCredentialsInterface } from "../../components/auth/types/auth";
-import { State } from "../index";
 import axios from "../../api/axiosInstance";
 import jwtDecode from "jwt-decode";
 import {
   UserSessionStateInterface,
   JwtDecodedInterface,
-} from "../reducers/reducers";
+} from "../reducers/types/reducers";
 
 export const loginUser = ({ email, password }: UserCredentialsInterface) => {
-  return async (dispatch: Dispatch<Action>, getState: () => State) => {
+  return async (dispatch: Dispatch<Action>) => {
     try {
       const apiResponse = await axios.post("/login", {
         email: email,
@@ -33,9 +32,7 @@ export const loginUser = ({ email, password }: UserCredentialsInterface) => {
           payload: sessionObject,
         });
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 };
 

@@ -1,7 +1,6 @@
 import { UserSessionAction } from "../actions/userSessionActions";
 import { UserSessionActionType as ActionType } from "../action-types/userSessionActionTypes";
-import jwtDecode from "jwt-decode";
-import { UserSessionStateInterface, JwtDecodedInterface } from "./reducers";
+import { UserSessionStateInterface } from "./types/reducers";
 
 const initialState: UserSessionStateInterface = {
   jwtToken: undefined,

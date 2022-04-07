@@ -1,24 +1,6 @@
 import { CodeFragmentsAction } from "../actions/codeFragmentsActions";
 import { CodeFragmentsActionType as ActionType } from "../action-types/codeFragmentsActionTypes";
-import { CancelTokenSource } from "axios";
-
-export type CodeFragment = {
-  questionId: string;
-  tag: string;
-  searchPhrase: string;
-  codeFragment: string;
-  hashMessage: string;
-};
-
-type CodeFragmentState = {
-  searchPhrase: string;
-  tag: string;
-  scraperType: string;
-  isLoading: boolean;
-  codeFragments: CodeFragment[];
-  abortToken: CancelTokenSource | undefined;
-  executionTime: number | undefined;
-};
+import { CodeFragmentState } from "./types/reducers";
 
 const initialState: CodeFragmentState = {
   searchPhrase: "",
@@ -30,7 +12,10 @@ const initialState: CodeFragmentState = {
   executionTime: undefined,
 };
 
-const reducer = (state: CodeFragmentState = initialState, action: CodeFragmentsAction) => {
+const reducer = (
+  state: CodeFragmentState = initialState,
+  action: CodeFragmentsAction
+) => {
   switch (action.type) {
     case ActionType.SET_SEARCH_PHRASE:
       return {
@@ -67,12 +52,12 @@ const reducer = (state: CodeFragmentState = initialState, action: CodeFragmentsA
         ...state,
         executionTime: action.payload,
       };
-      case ActionType.CLEAR_DATA:
-        return {
-          ...state,
-          codeFragments: [],
-          executionTime: undefined
-        };
+    case ActionType.CLEAR_DATA:
+      return {
+        ...state,
+        codeFragments: [],
+        executionTime: undefined,
+      };
     default:
       return state;
   }
