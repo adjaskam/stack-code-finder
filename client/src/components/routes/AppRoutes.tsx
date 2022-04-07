@@ -1,10 +1,8 @@
 import CodeFragmentsContainer from "../code-fragments/CodeFragmentsContainer";
 import { Routes, Route, Navigate } from "react-router-dom";
-import {
-  NotAuthorizedOnlyRoute,
-  RequiredAuthRoute,
-} from "../shared/RequiredAuth";
+import { WithAuthorizationStatus } from "../shared/WithAuthorizationStatus";
 import LoginContainer from "../auth/LoginContainer";
+import { Auth } from "../shared/WithAuthorizationStatus";
 
 const AppRoutes = () => {
   return (
@@ -12,17 +10,17 @@ const AppRoutes = () => {
       <Route
         path="/"
         element={
-          <RequiredAuthRoute>
+          <WithAuthorizationStatus auth={Auth.Required}>
             <CodeFragmentsContainer />
-          </RequiredAuthRoute>
+          </WithAuthorizationStatus>
         }
       />
       <Route
         path="/entry"
         element={
-          <NotAuthorizedOnlyRoute>
+          <WithAuthorizationStatus auth={Auth.None}>
             <LoginContainer />
-          </NotAuthorizedOnlyRoute>
+          </WithAuthorizationStatus>
         }
       />
       <Route path="*" element={<Navigate to="/not-found" />} />
