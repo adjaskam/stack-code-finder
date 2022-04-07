@@ -10,6 +10,7 @@ const initialState: CodeFragmentState = {
   codeFragments: [],
   abortToken: undefined,
   executionTime: undefined,
+  amount: 0
 };
 
 const reducer = (
@@ -58,6 +59,11 @@ const reducer = (
         codeFragments: [],
         executionTime: undefined,
       };
+      case ActionType.SET_AMOUNT:
+        return {
+          ...state,
+          amount: action.payload
+        };
     default:
       return state;
   }

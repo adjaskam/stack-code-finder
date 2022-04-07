@@ -1,9 +1,10 @@
 export interface CustomSelectPropsInterface {
   optionsList: SelectOption[];
   onChange: (ev: React.BaseSyntheticEvent) => void;
+  label: string;
 }
 
 export interface SelectOption {
-  value: string;
+  value: string | number;
   display?: string;
 }

@@ -12,8 +12,6 @@ axios.interceptors.request.use(
     if (sessionObject) {
       const parsedSessionObject: UserSessionStateInterface =
         JSON.parse(sessionObject);
-
-        // add expiration validation based on parsedSessionObject.exp
       config.headers.Authorization = `Bearer ${parsedSessionObject.jwtToken}`;
     }
 

@@ -39,6 +39,10 @@ interface SetExecutionTimeAction {
 interface ClearDataAction {
   type: ActionType.CLEAR_DATA;
 }
+interface SetAmountAction {
+  type: ActionType.SET_AMOUNT;
+  payload: number;
+}
 
 export type CodeFragmentsAction =
   | SetSearchPhraseAction
@@ -48,4 +52,5 @@ export type CodeFragmentsAction =
   | SetAbortTokenFetchCodeFragmentsAction
   | SetScraperTypeAction
   | SetExecutionTimeAction
-  | ClearDataAction;
+  | ClearDataAction
+  | SetAmountAction;

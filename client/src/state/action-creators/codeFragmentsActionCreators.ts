@@ -40,6 +40,15 @@ export const removeCancelToken = () => {
   };
 };
 
+export const setAmount = (amount: number) => {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.SET_AMOUNT,
+      payload: amount,
+    });
+  };
+};
+
 export const fetchCodeFragments = () => {
   return async (dispatch: Dispatch<Action>, getState: () => State) => {
     dispatch({
@@ -49,7 +58,7 @@ export const fetchCodeFragments = () => {
     const body = {
       searchPhrase: codeFragment.searchPhrase.trim(),
       tag: codeFragment.tag,
-      amount: 1,
+      amount: codeFragment.amount,
       scraperType: codeFragment.scraperType,
     };
 

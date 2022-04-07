@@ -26,6 +26,7 @@ export interface CodeFragmentState {
   codeFragments: CodeFragment[];
   abortToken: CancelTokenSource | undefined;
   executionTime: number | undefined;
+  amount: number;
 };
 
 
