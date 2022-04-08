@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { UserSessionStateInterface } from "../state/reducers/types/reducers";
+import { NotificationManager } from "react-notifications";
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
@@ -19,6 +20,20 @@ axios.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const errorData = error.response.data;
+    if (Array.isArray(errorData) && errorData.length > 0) {
+      errorData.forEach((error) =>
+        NotificationManager.error(error.result, "Validation error", 3500)
+      );
+    } else {
+      NotificationManager.error(errorData, error.response.statusText, 3500);
+    }
   }
 );
 

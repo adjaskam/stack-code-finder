@@ -1,7 +1,6 @@
 import { check } from "express-validator";
 import { validationResult } from "express-validator";
 import { NextFunction, Response, Request } from "express";
-import ApiError from "../errors/ApiError";
 import ValidationError, { ValidationResult } from "../errors/ValidationError";
 
 export function fetchCodeFragmentsValidationSchema() {
@@ -20,8 +19,8 @@ export function fetchCodeFragmentsValidationSchema() {
       ),
     check("amount")
       .trim()
-      .isInt({ min: 3, max: 10 })
-      .withMessage("Amount should be greater than 3 and lower than 10")
+      .isInt({ min: 1, max: 10 })
+      .withMessage("amount should be greater than 0 and max 10")
       .bail()
       .isNumeric()
       .withMessage("amount must be numeric."),

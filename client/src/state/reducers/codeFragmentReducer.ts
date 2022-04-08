@@ -10,7 +10,7 @@ const initialState: CodeFragmentState = {
   codeFragments: [],
   abortToken: undefined,
   executionTime: undefined,
-  amount: 0
+  amount: 1
 };
 
 const reducer = (

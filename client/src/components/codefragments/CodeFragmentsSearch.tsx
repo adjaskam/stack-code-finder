@@ -56,7 +56,7 @@ const CodeFragmentsSearch = () => {
         </Col>
         <Col lg={1}>
           <CustomSelect
-            optionsList={Array.from(Array(AMOUNT_LIMIT).keys()).map(
+            optionsList={Array.from({ length: 10 }, (_, i) => i + 1).map(
               (number) => ({
                 value: number,
               })

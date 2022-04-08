@@ -10,10 +10,6 @@ import {
   UserSessionStateInterface,
   JwtDecodedInterface,
 } from "../reducers/types/reducers";
-import {
-  NotificationContainer,
-  NotificationManager,
-} from "react-notifications";
 
 export const loginUser = ({ email, password }: UserCredentialsInterface) => {
   return async (dispatch: Dispatch<Action>) => {
@@ -36,9 +32,7 @@ export const loginUser = ({ email, password }: UserCredentialsInterface) => {
           payload: sessionObject,
         });
       }
-    } catch (error: any) {
-      NotificationManager.warning(error.message, "Auth error", 2500);
-    }
+    } catch (error: any) {}
   };
 };
 

@@ -18,4 +18,6 @@ export async function handleApplicationError(
   if (err instanceof ValidationError) {
     return res.status(400).send(err.validationResults);
   }
+
+  return res.status(500).send("Something went wrong");
 }
