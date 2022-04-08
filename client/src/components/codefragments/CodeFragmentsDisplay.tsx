@@ -15,11 +15,21 @@ import { CodeBlock, dracula } from "react-code-blocks";
 
 const CodeFragmentsDisplay = () => {
   const dispatch = useDispatch();
-  const { removeCancelToken, fetchAllOwnCodeFragments, setPage } =
-    bindActionCreators(codeFragmentsActionCreators, dispatch);
+  const {
+    removeCancelToken,
+    fetchAllOwnCodeFragments,
+    setPage,
+    deleteCodeFragment,
+    clearData,
+  } = bindActionCreators(codeFragmentsActionCreators, dispatch);
   const state = useSelector((state: State) => state.codeFragment);
 
-  const CustomToggle = ({ children, eventKey, questionId }: any) => {
+  const CustomToggle = ({
+    children,
+    eventKey,
+    questionId,
+    hashMessage,
+  }: any) => {
     const decoratedOnClick = useAccordionButton(eventKey);
 
     return (
@@ -31,7 +41,14 @@ const CodeFragmentsDisplay = () => {
           {questionId}
         </a>
         <div className="d-flex">
-          <Button>Delete</Button>
+          <Button
+            variant="danger"
+            onClick={(ev: any) => {
+              deleteCodeFragment(hashMessage);
+            }}
+          >
+            Delete
+          </Button>
           <Button onClick={decoratedOnClick} className="ms-2">
             Show
           </Button>
@@ -68,7 +85,6 @@ const CodeFragmentsDisplay = () => {
           )}
           {state.itemsInTotal > 0 && (
             <Pagination>
-              {console.log(state.itemsInTotal)}
               {state.itemsInTotal > 0 &&
                 Array.from(
                   { length: Math.ceil(state.itemsInTotal / 6) },
@@ -96,6 +112,7 @@ const CodeFragmentsDisplay = () => {
                   <CustomToggle
                     eventKey={index.toString()}
                     questionId={item.questionId}
+                    hashMessage={item.hashMessage}
                   />
                 </Card.Header>
                 <Accordion.Collapse eventKey={index.toString()}>

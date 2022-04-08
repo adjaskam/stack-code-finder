@@ -10,5 +10,6 @@ export enum CodeFragmentsActionType {
     CLEAR_DATA = "clear_data",
     SET_AMOUNT = "set_amount",
     SET_PAGE = "set_page",
-    SET_ITEMS_IN_TOTAL = "set_items_in_total"
+    SET_ITEMS_IN_TOTAL = "set_items_in_total",
+    DELETE_CODE_FRAGMENT = "delete_code_fragment"
 }

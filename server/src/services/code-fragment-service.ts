@@ -79,3 +79,23 @@ export async function countAllCodeFragmentsByUser(
     throw ApiError.badRequest(error.message);
   }
 }
+
+export async function deleteCodeFragment(
+  userId: string,
+  hashMessage: string
+): Promise<DeleteResult | boolean> {
+  try {
+    const userRemovedUserOwnsArray = await CodeFragment.findOneAndUpdate(
+      { hashMessage: hashMessage },
+      { $pull: { usersOwn: userId } }
+    );
+
+    if (userRemovedUserOwnsArray?.usersOwn.length === 1) {
+      return await CodeFragment.deleteOne({ hashMessage: hashMessage });
+    }
+    
+    return true;
+  } catch (error) {
+    throw ApiError.badRequest(error.message);
+  }
+}

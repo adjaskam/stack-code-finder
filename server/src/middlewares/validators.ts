@@ -42,6 +42,17 @@ export function fetchCodeFragmentsBySearchPhraseValidationSchema() {
   ];
 }
 
+export function deleteCodeFragmentByHashMessageValidationSchema() {
+  return [
+    check("hashMessage")
+      .trim()
+      .isLength({ min: 20 })
+      .withMessage(
+        "hashMessage must be a valid string with minimal length of 3 digits"
+      ),
+  ];
+}
+
 export function credentialsValidationSchema() {
   return [
     check("email")

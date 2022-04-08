@@ -7,6 +7,7 @@ import {
   findOneAndUpdateCodeFragment,
   findAllCodeFragmentsByUser,
   countAllCodeFragmentsByUser,
+  deleteCodeFragment,
 } from "../services/code-fragment-service";
 import { fetchQuestionsFromStackAPI } from "../api";
 import CodeFragment, {
@@ -217,6 +218,26 @@ export async function getAllCodeFragmentsForUserHandler(
       totalCount
     );
     return res.status(200).send(codeFragmentsListDto);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteCodeFragmentHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const userId = req.user?.id;
+  try {
+    if (!userId) {
+      throw ApiError.badRequest("CANNOT_FIND_USER_ID");
+    }
+    const hashMessage = req.params.hashMessage;
+
+    const result = await deleteCodeFragment(userId, hashMessage);
+    console.log(result);
+    return res.status(200).send(result);
   } catch (error) {
     next(error);
   }

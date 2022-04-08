@@ -58,6 +58,14 @@ export const setPage = (page: number) => {
   };
 };
 
+export const clearData = () => {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.CLEAR_DATA,
+    });
+  };
+};
+
 export const fetchCodeFragments = () => {
   return async (dispatch: Dispatch<Action>, getState: () => State) => {
     dispatch({
@@ -138,6 +146,29 @@ export const fetchAllOwnCodeFragments = () => {
     } finally {
       dispatch({
         type: ActionType.SET_LOADING,
+      });
+    }
+  };
+};
+
+export const deleteCodeFragment = (hashMessage: string) => {
+  return async (dispatch: Dispatch<Action>, getState: () => State) => {
+    dispatch({
+      type: ActionType.SET_LOADING,
+    });
+
+    try {
+      const apiResponse = await axios.delete(`/codefragments/${hashMessage}`);
+    } catch (error: any) {
+    } finally {
+      const codeFragments = getState().codeFragment.codeFragments;
+    
+      dispatch({
+        type: ActionType.SET_LOADING,
+      });
+      dispatch({
+        type: ActionType.FETCH_CODE_FRAGMENTS,
+        payload: codeFragments.filter(x => x.hashMessage !== hashMessage)
       });
     }
   };

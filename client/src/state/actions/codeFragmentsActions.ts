@@ -52,6 +52,11 @@ interface SetItemsInTotalAction {
   payload: number;
 }
 
+interface DeleteCodeFragmentAction {
+  type: ActionType.DELETE_CODE_FRAGMENT;
+  payload: string;
+}
+
 export type CodeFragmentsAction =
   | SetSearchPhraseAction
   | SetTagAction
@@ -63,4 +68,5 @@ export type CodeFragmentsAction =
   | ClearDataAction
   | SetAmountAction
   | SetPageAction
-  | SetItemsInTotalAction;
+  | SetItemsInTotalAction
+  | DeleteCodeFragmentAction;
