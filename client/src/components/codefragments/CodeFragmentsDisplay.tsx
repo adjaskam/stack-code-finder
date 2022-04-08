@@ -8,9 +8,10 @@ import {
   Button,
   Spinner,
   Pagination,
+  Card,
+  useAccordionButton,
 } from "react-bootstrap";
 import { CodeBlock, dracula } from "react-code-blocks";
-import { setPage } from "../../state/action-creators/codeFragmentsActionCreators";
 
 const CodeFragmentsDisplay = () => {
   const dispatch = useDispatch();
@@ -18,17 +19,25 @@ const CodeFragmentsDisplay = () => {
     bindActionCreators(codeFragmentsActionCreators, dispatch);
   const state = useSelector((state: State) => state.codeFragment);
 
-  const paginateCodeFragments = () => {
-    const pages = Math.ceil(state.itemsInTotal / 5);
-    const paginationBarItems = [];
-    for (let page = 1; page <= pages; page++) {
-      paginationBarItems.push(
-        <Pagination.Item key={page} active={page === 1}>
-          {page}
-        </Pagination.Item>
-      );
-    }
-    return paginationBarItems;
+  const CustomToggle = ({ children, eventKey, questionId }: any) => {
+    const decoratedOnClick = useAccordionButton(eventKey);
+
+    return (
+      <div className="d-flex justify-content-between align-items-center">
+        <a
+          target="_blank"
+          href={`https://stackoverflow.com/questions/${questionId}`}
+        >
+          {questionId}
+        </a>
+        <div className="d-flex">
+          <Button>Delete</Button>
+          <Button onClick={decoratedOnClick} className="ms-2">
+            Show
+          </Button>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -69,8 +78,10 @@ const CodeFragmentsDisplay = () => {
                     key={page}
                     active={page === state.page}
                     onClick={() => {
-                      setPage(page);
-                      fetchAllOwnCodeFragments();
+                      if (page != state.page) {
+                        setPage(page);
+                        fetchAllOwnCodeFragments();
+                      }
                     }}
                   >
                     {page + 1}
@@ -79,23 +90,25 @@ const CodeFragmentsDisplay = () => {
             </Pagination>
           )}
           {state.codeFragments?.map((item, index) => (
-            <Accordion.Item eventKey={index.toString()}>
-              <Accordion.Header>
-                <a
-                  target="_blank"
-                  href={`https://stackoverflow.com/questions/${item.questionId}`}
-                >
-                  {item.questionId}
-                </a>
-              </Accordion.Header>
-              <Accordion.Body>
-                <CodeBlock
-                  text={item.codeFragment}
-                  theme={dracula}
-                  language={item.tag}
-                />
-              </Accordion.Body>
-            </Accordion.Item>
+            <Accordion>
+              <Card>
+                <Card.Header>
+                  <CustomToggle
+                    eventKey={index.toString()}
+                    questionId={item.questionId}
+                  />
+                </Card.Header>
+                <Accordion.Collapse eventKey={index.toString()}>
+                  <Card.Body>
+                    <CodeBlock
+                      text={item.codeFragment}
+                      theme={dracula}
+                      language={item.tag}
+                    />
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
           ))}
         </Accordion>
       </Row>
