@@ -1,6 +1,6 @@
 import { CancelTokenSource } from "axios";
 import { CodeFragmentsActionType as ActionType } from "../action-types/codeFragmentsActionTypes";
-import { CodeFragment } from "../reducers/codeFragmentReducer";
+import { CodeFragment } from "../reducers/types/reducers";
 
 interface SetSearchPhraseAction {
   type: ActionType.SET_SEARCH_PHRASE;
@@ -39,6 +39,10 @@ interface SetExecutionTimeAction {
 interface ClearDataAction {
   type: ActionType.CLEAR_DATA;
 }
+interface SetAmountAction {
+  type: ActionType.SET_AMOUNT;
+  payload: number;
+}
 
 export type CodeFragmentsAction =
   | SetSearchPhraseAction
@@ -48,4 +52,5 @@ export type CodeFragmentsAction =
   | SetAbortTokenFetchCodeFragmentsAction
   | SetScraperTypeAction
   | SetExecutionTimeAction
-  | ClearDataAction;
+  | ClearDataAction
+  | SetAmountAction;

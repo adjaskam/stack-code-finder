@@ -1,10 +1,17 @@
 import { UserSessionAction } from "../actions/userSessionActions";
 import { UserSessionActionType as ActionType } from "../action-types/userSessionActionTypes";
-import jwtDecode from "jwt-decode";
-import { UserSessionStateInterface, JwtDecodedInterface } from "./reducers";
+import { UserSessionStateInterface } from "./types/reducers";
 
+const getJwtToken = () => {
+  const sessionString = localStorage.getItem("session");
+  let parsedObject = undefined;
+  if (sessionString) {
+    parsedObject = JSON.parse(sessionString);
+  }
+  return parsedObject;
+};
 const initialState: UserSessionStateInterface = {
-  jwtToken: undefined,
+  jwtToken: getJwtToken(),
   userEmail: undefined,
   exp: undefined,
 };

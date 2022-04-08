@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { store } from "./state";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'react-notifications/lib/notifications.css';
 
 ReactDOM.render(
   <React.StrictMode>

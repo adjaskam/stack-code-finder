@@ -8,4 +8,5 @@ export enum CodeFragmentsActionType {
     SET_SCRAPER_TYPE = "set_scraper_type",
     SET_EXECUTION_TIME = "set_execution_time",
     CLEAR_DATA = "clear_data",
+    SET_AMOUNT = "set_amount",
 }

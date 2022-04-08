@@ -1,6 +1,6 @@
-import { AuthFormPropsInterface, UserCredentialsInterface } from "./types/auth";
-import CustomFormField from "./CustomFormField";
-import { LoginSchema } from "./validation/AuthValidationSchema";
+import { AuthFormPropsInterface, UserCredentialsInterface } from "../types/auth";
+import CustomFormField from "../../shared/CustomFormField";
+import { LoginSchema } from "../validation/AuthValidationSchema";
 import { Formik, Form, Field } from "formik";
 import { Button } from "react-bootstrap";
 

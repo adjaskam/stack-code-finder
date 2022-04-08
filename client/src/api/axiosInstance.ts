@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { UserSessionStateInterface } from "../state/reducers/reducers";
+import { UserSessionStateInterface } from "../state/reducers/types/reducers";
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
@@ -12,8 +12,6 @@ axios.interceptors.request.use(
     if (sessionObject) {
       const parsedSessionObject: UserSessionStateInterface =
         JSON.parse(sessionObject);
-
-        // add expiration validation based on parsedSessionObject.exp
       config.headers.Authorization = `Bearer ${parsedSessionObject.jwtToken}`;
     }
 

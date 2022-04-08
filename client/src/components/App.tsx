@@ -1,21 +1,15 @@
-import CustomRoutes from "./routes/CustomRoutes";
-import styled from "styled-components";
-
-const RootContainer = styled.div`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: #bdc1c6;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-`;
+import AppRoutes from "./routes/AppRoutes";
+import Header from "./shared/Header";
+import { Container } from "react-bootstrap";
+import { NotificationContainer } from "react-notifications";
 
 const App = () => {
   return (
-    <RootContainer>
-      <CustomRoutes />
-    </RootContainer>
+    <Container fluid className="bg-light vh-100">
+      <Header />
+      <AppRoutes />
+      <NotificationContainer />
+    </Container>
   );
 };
 

@@ -1,6 +1,6 @@
-import { AuthFormPropsInterface, UserCredentialsInterface } from "./types/auth";
-import CustomFormField from "./CustomFormField";
-import { RegisterSchema } from "./validation/AuthValidationSchema";
+import { AuthFormPropsInterface, UserCredentialsInterface } from "../types/auth";
+import CustomFormField from "../../shared/CustomFormField";
+import { RegisterSchema } from "../validation/AuthValidationSchema";
 import { Formik, Form } from "formik";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
