@@ -17,6 +17,7 @@ import {
   fetchCodeFragmentsValidationSchema,
   validate,
   fetchCodeFragmentsBySearchPhraseValidationSchema,
+  fetchAllOwnCodeFragmentsSchema,
 } from "./middlewares/validators";
 import { checkUserAuthStatus } from "./middlewares/auth-middleware";
 
@@ -45,6 +46,8 @@ export default function (app: Express) {
   );
   app.get(
     "/api/codefragments/my",
+    fetchAllOwnCodeFragmentsSchema(),
+    validate,
     checkUserAuthStatus,
     getAllCodeFragmentsForUserHandler
   );

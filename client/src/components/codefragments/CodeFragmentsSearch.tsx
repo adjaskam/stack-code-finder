@@ -10,7 +10,7 @@ import {
   Col,
   Button,
 } from "react-bootstrap";
-import { SCRAPER_TYPES, TAGS, AMOUNT_LIMIT } from "./constants";
+import { SCRAPER_TYPES, TAGS } from "./constants";
 
 const CodeFragmentsSearch = () => {
   const dispatch = useDispatch();

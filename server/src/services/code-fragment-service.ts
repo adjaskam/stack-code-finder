@@ -57,10 +57,24 @@ export async function deleteAllCodeFragments(): Promise<DeleteResult> {
 }
 
 export async function findAllCodeFragmentsByUser(
-  userId: string
+  userId: string,
+  page: number,
+  limit: number
 ): Promise<CodeFragmentEntity[]> {
   try {
-    return await CodeFragment.find({ usersOwn: { $in: [userId] } });
+    return await CodeFragment.find({ usersOwn: { $in: [userId] } })
+      .skip(limit * page)
+      .limit(limit);
+  } catch (error) {
+    throw ApiError.badRequest(error.message);
+  }
+}
+
+export async function countAllCodeFragmentsByUser(
+  userId: string
+): Promise<number> {
+  try {
+    return await CodeFragment.countDocuments({ usersOwn: { $in: [userId] } });
   } catch (error) {
     throw ApiError.badRequest(error.message);
   }

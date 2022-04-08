@@ -49,6 +49,15 @@ export const setAmount = (amount: number) => {
   };
 };
 
+export const setPage = (page: number) => {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.SET_PAGE,
+      payload: page,
+    });
+  };
+};
+
 export const fetchCodeFragments = () => {
   return async (dispatch: Dispatch<Action>, getState: () => State) => {
     dispatch({
@@ -100,7 +109,7 @@ export const fetchCodeFragments = () => {
 };
 
 export const fetchAllOwnCodeFragments = () => {
-  return async (dispatch: Dispatch<Action>) => {
+  return async (dispatch: Dispatch<Action>, getState: () => State) => {
     dispatch({
       type: ActionType.CLEAR_DATA,
     });
@@ -108,12 +117,22 @@ export const fetchAllOwnCodeFragments = () => {
       type: ActionType.SET_LOADING,
     });
 
+    const state = getState();
     try {
       // fetch code fragments from backend API
-      const apiResponse = await axios.get("/codefragments/my");
+      const apiResponse = await axios.get("/codefragments/my", {
+        params: {
+          page: state.codeFragment.page,
+          limit: 6,
+        },
+      });
       dispatch({
         type: ActionType.FETCH_CODE_FRAGMENTS,
         payload: apiResponse.data.items,
+      });
+      dispatch({
+        type: ActionType.SET_ITEMS_IN_TOTAL,
+        payload: apiResponse.data.amount,
       });
     } catch (error: any) {
     } finally {

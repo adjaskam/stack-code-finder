@@ -10,7 +10,9 @@ const initialState: CodeFragmentState = {
   codeFragments: [],
   abortToken: undefined,
   executionTime: undefined,
-  amount: 1
+  amount: 1,
+  page: 0,
+  itemsInTotal: 0
 };
 
 const reducer = (
@@ -58,12 +60,23 @@ const reducer = (
         ...state,
         codeFragments: [],
         executionTime: undefined,
+        itemsInTotal: 0
       };
-      case ActionType.SET_AMOUNT:
-        return {
-          ...state,
-          amount: action.payload
-        };
+    case ActionType.SET_AMOUNT:
+      return {
+        ...state,
+        amount: action.payload
+      };
+    case ActionType.SET_PAGE:
+      return {
+        ...state,
+        page: action.payload
+      };
+    case ActionType.SET_ITEMS_IN_TOTAL:
+      return {
+        ...state,
+        itemsInTotal: action.payload
+      };
     default:
       return state;
   }

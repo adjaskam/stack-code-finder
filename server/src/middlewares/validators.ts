@@ -62,6 +62,19 @@ export function credentialsValidationSchema() {
   ];
 }
 
+export function fetchAllOwnCodeFragmentsSchema() {
+  return [
+    check("page")
+      .trim()
+      .isInt({ min: 0 })
+      .withMessage("page param is obligatory"),
+    check("limit")
+      .trim()
+      .isInt({ min: 5 })
+      .withMessage("limit param is obligatory and 5 at minimum"),
+  ];
+}
+
 export function validate(req: Request, res: Response, next: NextFunction) {
   const errors = validationResult(req).array();
   if (errors && errors.length) {

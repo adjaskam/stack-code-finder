@@ -5,7 +5,8 @@ import {
   findAllCodeFragmentsBySearchPhrase,
   findAllCodeFragments,
   findOneAndUpdateCodeFragment,
-  findAllCodeFragmentsByUser
+  findAllCodeFragmentsByUser,
+  countAllCodeFragmentsByUser,
 } from "../services/code-fragment-service";
 import { fetchQuestionsFromStackAPI } from "../api";
 import CodeFragment, {
@@ -203,13 +204,17 @@ export async function getAllCodeFragmentsForUserHandler(
 ) {
   const userId = req.user?.id;
   try {
+    const limit: number = parseInt(req.query.limit as string);
+    const page: number = parseInt(req.query.page as string);
     if (!userId) {
       throw ApiError.badRequest("CANNOT_FIND_USER_ID");
     }
-    const codeFragments = await findAllCodeFragmentsByUser(userId);
+
+    const codeFragments = await findAllCodeFragmentsByUser(userId, page, limit);
+    const totalCount = await countAllCodeFragmentsByUser(userId);
     const codeFragmentsListDto = new CodeFragmentsListDto(
       codeFragments,
-      codeFragments.length
+      totalCount
     );
     return res.status(200).send(codeFragmentsListDto);
   } catch (error) {

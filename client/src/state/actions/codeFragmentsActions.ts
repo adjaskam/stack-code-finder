@@ -43,6 +43,14 @@ interface SetAmountAction {
   type: ActionType.SET_AMOUNT;
   payload: number;
 }
+interface SetPageAction {
+  type: ActionType.SET_PAGE;
+  payload: number;
+}
+interface SetItemsInTotalAction {
+  type: ActionType.SET_ITEMS_IN_TOTAL;
+  payload: number;
+}
 
 export type CodeFragmentsAction =
   | SetSearchPhraseAction
@@ -53,4 +61,6 @@ export type CodeFragmentsAction =
   | SetScraperTypeAction
   | SetExecutionTimeAction
   | ClearDataAction
-  | SetAmountAction;
+  | SetAmountAction
+  | SetPageAction
+  | SetItemsInTotalAction;

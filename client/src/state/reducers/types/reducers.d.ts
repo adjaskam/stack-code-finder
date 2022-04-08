@@ -27,6 +27,8 @@ export interface CodeFragmentState {
   abortToken: CancelTokenSource | undefined;
   executionTime: number | undefined;
   amount: number;
+  page: number;
+  itemsInTotal: number;
 };
 
 

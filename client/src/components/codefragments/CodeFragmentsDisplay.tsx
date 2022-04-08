@@ -1,16 +1,35 @@
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import { codeFragmentsActionCreators, State } from "../../state";
-import { Accordion, Container, Row, Button, Spinner } from "react-bootstrap";
+import {
+  Accordion,
+  Container,
+  Row,
+  Button,
+  Spinner,
+  Pagination,
+} from "react-bootstrap";
 import { CodeBlock, dracula } from "react-code-blocks";
+import { setPage } from "../../state/action-creators/codeFragmentsActionCreators";
 
 const CodeFragmentsDisplay = () => {
   const dispatch = useDispatch();
-  const { removeCancelToken } = bindActionCreators(
-    codeFragmentsActionCreators,
-    dispatch
-  );
+  const { removeCancelToken, fetchAllOwnCodeFragments, setPage } =
+    bindActionCreators(codeFragmentsActionCreators, dispatch);
   const state = useSelector((state: State) => state.codeFragment);
+
+  const paginateCodeFragments = () => {
+    const pages = Math.ceil(state.itemsInTotal / 5);
+    const paginationBarItems = [];
+    for (let page = 1; page <= pages; page++) {
+      paginationBarItems.push(
+        <Pagination.Item key={page} active={page === 1}>
+          {page}
+        </Pagination.Item>
+      );
+    }
+    return paginationBarItems;
+  };
 
   return (
     <Container fluid>
@@ -37,6 +56,27 @@ const CodeFragmentsDisplay = () => {
               To view related Stackoverflow thread click on Question ID in item
               header
             </p>
+          )}
+          {state.itemsInTotal > 0 && (
+            <Pagination>
+              {console.log(state.itemsInTotal)}
+              {state.itemsInTotal > 0 &&
+                Array.from(
+                  { length: Math.ceil(state.itemsInTotal / 6) },
+                  (_, i) => i
+                ).map((page) => (
+                  <Pagination.Item
+                    key={page}
+                    active={page === state.page}
+                    onClick={() => {
+                      setPage(page);
+                      fetchAllOwnCodeFragments();
+                    }}
+                  >
+                    {page + 1}
+                  </Pagination.Item>
+                ))}
+            </Pagination>
           )}
           {state.codeFragments?.map((item, index) => (
             <Accordion.Item eventKey={index.toString()}>
