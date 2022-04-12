@@ -24,7 +24,7 @@
 <h3 align="center">stack-code-finder</h3>
 
   <p align="center">
-   Automated scrapper built with Stackoverflow API.<br />Search data in Stackoverflow - consider only code snippets in selected threads.  
+   Automated scrapper built with Stackoverflow API.<br />Search code fragments by given phrase in Stackoverflow - consider only code snippets in selected threads.  
     <br />
     ·
     <a href="https://github.com/adjaskam/stack-code-finder/issues">Report Bug</a>
@@ -90,15 +90,20 @@ You can find more information on getting the `STACK_API_KEY` by following https:
    git clone https://github.com/adjaskam/stack-code-finder.git
    ```
 2. Install NPM packages for the client
-3. Start the project with `concurrently` (invoke from root directory)
+   ```sh
+   cd client
+   npm i
+    ```
+3. Start the project with `concurrently` (invoke from the root directory)
    ```sh
    npm run dev:fullstack
-   ```
+    ```
+**Note**: The backend part of this project is based on Dockerfile and the development process is placed within the container.
 
 
 ## Endpoints
 * POST `/api/codefragments` -
-start a job for given `tag` (includes web scrapping procedure). The application supports the creation of duplicate extracted fragments by comparing values of MD5 hash. 
+start a job for given `tag` (includes web scrapping procedure). The application supports the creation of duplicate extracted fragments by comparing values of MD5 hash and handling user-specific documents (that means owning the fragment by multiple users - prevent creating duplicates).
 
 #### Body of the example request: 
 ```json
@@ -142,7 +147,10 @@ start a job for given `tag` (includes web scrapping procedure). The application 
 
 * GET `/api/codefragments/my` - get all obtained code fragments per user
 * GET `/api/codefragments` - get all obtained code fragments
-* DELETE `/api/codefragments`- delete all code fragments 
+* DELETE `/api/codefragments`- delete all code fragments
+
+Authentication is needed to handle user-specific documents and is based on JWT standard.
+No confirmation needed while registering. Email has to be unique. All forms available in the application are being validated.
 * POST `/api/register` - register new user
 * POST `/api/login`- service login
 
