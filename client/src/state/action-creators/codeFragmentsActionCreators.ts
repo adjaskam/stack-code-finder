@@ -103,7 +103,7 @@ export const fetchCodeFragments = () => {
         type: ActionType.SET_EXECUTION_TIME,
         payload: apiResponse.data.executionTime,
       });
-    } catch (error: any) {
+    } catch (error) {
     } finally {
       dispatch({
         type: ActionType.SET_LOADING,
@@ -142,7 +142,7 @@ export const fetchAllOwnCodeFragments = () => {
         type: ActionType.SET_ITEMS_IN_TOTAL,
         payload: apiResponse.data.amount,
       });
-    } catch (error: any) {
+    } catch (error) {
     } finally {
       dispatch({
         type: ActionType.SET_LOADING,
@@ -159,7 +159,7 @@ export const deleteCodeFragment = (hashMessage: string) => {
 
     try {
       const apiResponse = await axios.delete(`/codefragments/${hashMessage}`);
-    } catch (error: any) {
+    } catch (error) {
     } finally {
       const codeFragments = getState().codeFragment.codeFragments;
     

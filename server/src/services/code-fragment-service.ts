@@ -16,12 +16,12 @@ export async function createCodeFragment(
 
 export async function findOneAndUpdateCodeFragment(
   hash: string,
-  userId: string
+  userEmail: string
 ): Promise<CodeFragmentEntity | null> {
   try {
     return await CodeFragment.findOneAndUpdate(
       { hashMessage: hash },
-      { $push: { usersOwn: userId } }
+      { $push: { usersOwn: userEmail } }
     );
   } catch (error) {
     throw ApiError.badRequest(error.message);
@@ -56,13 +56,13 @@ export async function deleteAllCodeFragments(): Promise<DeleteResult> {
   }
 }
 
-export async function findAllCodeFragmentsByUser(
-  userId: string,
+export async function findPaginatedCodeFragmentsByUser(
+  userEmail: string,
   page: number,
   limit: number
 ): Promise<CodeFragmentEntity[]> {
   try {
-    return await CodeFragment.find({ usersOwn: { $in: [userId] } })
+    return await CodeFragment.find({ usersOwn: { $in: [userEmail] } })
       .skip(limit * page)
       .limit(limit);
   } catch (error) {
@@ -70,24 +70,34 @@ export async function findAllCodeFragmentsByUser(
   }
 }
 
+export async function findAllCodeFragmentsByUser(
+  userEmail: string,
+): Promise<CodeFragmentEntity[]> {
+  try {
+    return await CodeFragment.find({ usersOwn: { $in: [userEmail] } });
+  } catch (error) {
+    throw ApiError.badRequest(error.message);
+  }
+}
+
 export async function countAllCodeFragmentsByUser(
-  userId: string
+  userEmail: string
 ): Promise<number> {
   try {
-    return await CodeFragment.countDocuments({ usersOwn: { $in: [userId] } });
+    return await CodeFragment.countDocuments({ usersOwn: { $in: [userEmail] } });
   } catch (error) {
     throw ApiError.badRequest(error.message);
   }
 }
 
 export async function deleteCodeFragment(
-  userId: string,
+  userEmail: string,
   hashMessage: string
 ): Promise<DeleteResult | boolean> {
   try {
     const userRemovedUserOwnsArray = await CodeFragment.findOneAndUpdate(
       { hashMessage: hashMessage },
-      { $pull: { usersOwn: userId } }
+      { $pull: { usersOwn: userEmail } }
     );
 
     if (userRemovedUserOwnsArray?.usersOwn.length === 1) {

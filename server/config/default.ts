@@ -7,15 +7,17 @@ const {
   MONGO_DB_PORT,
   MONGO_DB_SERVICE_NAME,
   CODE_FRAGMENTS_FETCH_LIMIT,
-  TOKEN_SECRET,
-  REFRESH_TOKEN_SECRET,
+  JWT_TOKEN_SECRET,
+  STACK_API_KEY,
+  HOST,
+  PORT,
 } = process.env;
 
 export default {
-  port: 3000,
-  host: "0.0.0.0",
+  port: PORT,
+  host: HOST,
   dbUri: `mongodb://${MONGO_DB_USER}:${MONGO_DB_PASSWORD}@${MONGO_DB_SERVICE_NAME}:${MONGO_DB_PORT}/${MONGO_DB_NAME}?authSource=admin`,
   codeFragmentsFetchLimit: CODE_FRAGMENTS_FETCH_LIMIT,
-  tokenSecret: TOKEN_SECRET,
-  refreshTokenSecret: REFRESH_TOKEN_SECRET
+  jwtTokenSecret: JWT_TOKEN_SECRET,
+  stackApiKey: STACK_API_KEY,
 };

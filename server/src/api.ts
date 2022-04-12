@@ -1,22 +1,22 @@
 import fetch from "node-fetch";
 import ApiError from "./errors/ApiError";
 import log from "./loggers";
+import config from "config";
 
-// This is not considered a secret, and may be safely embed in client side code or distributed binaries.
-const STACK_API_KEY = "1)QIB80MJ1mCrDp0MtRRiA((";
+const stackApiKey = config.get("stackApiKey") as string;
 
 export async function fetchQuestionsFromStackAPI(tag: string, page: number) {
   const params = [
     `tagged=${tag}`,
     "site=stackoverflow",
-    `key=${STACK_API_KEY}`,
+    `key=${stackApiKey}`,
     `page=${page}`,
   ];
 
   const url = `https://api.stackexchange.com/2.3/questions?${params.join("&")}`;
   try {
     const response = await fetch(url);
-    log.info(`RESPONSE_RECEIVED FROM: ${url}`);
+    log.info(`RESPONSE_RECEIVED_FROM: ${url}`);
     return response.json();
   } catch (error) {
     throw ApiError.stackApiIssue(error.message);

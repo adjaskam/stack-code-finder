@@ -20,6 +20,7 @@ class CheerioScraper implements AppScraperInterface {
       entries.each((index: number, item: any) => {
         elements.push($(item).text());
       });
+  
       return elements;
     } catch (error) {
       throw ApiError.scrapperIssue(error.message);

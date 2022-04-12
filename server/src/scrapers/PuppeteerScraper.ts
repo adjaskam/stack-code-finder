@@ -14,6 +14,7 @@ class PuppeteerScraper implements AppScraperInterface {
       executablePath: "/usr/bin/chromium-browser",
       args: ["--no-sandbox", "--disable-gpu"],
     });
+
     try {
       const page = await browser.newPage();
       page.setDefaultNavigationTimeout(4000);

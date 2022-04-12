@@ -31,17 +31,6 @@ export function fetchCodeFragmentsValidationSchema() {
   ];
 }
 
-export function fetchCodeFragmentsBySearchPhraseValidationSchema() {
-  return [
-    check("searchPhrase")
-      .trim()
-      .isLength({ min: 3 })
-      .withMessage(
-        "searchPhrase must be a valid string with minimal length of 3 digits"
-      ),
-  ];
-}
-
 export function deleteCodeFragmentByHashMessageValidationSchema() {
   return [
     check("hashMessage")

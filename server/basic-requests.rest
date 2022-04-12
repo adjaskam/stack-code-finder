@@ -3,8 +3,8 @@ POST http://localhost/api/register
 content-type: application/json
 
 {
-    "email": "example1@example.com",
-    "password": "zaq1@WSX"
+    "email": "example@example.com",
+    "password": "example"
 }
 
 ### Login -> Login user
@@ -12,8 +12,8 @@ POST http://localhost/api/login
 content-type: application/json
 
 {
-    "email": "example1@example.com",
-    "password": "zaq1@WSX"
+    "email": "example@example.com",
+    "password": "example"
 }
 
 ### Endpoint -> Fetch code fragments

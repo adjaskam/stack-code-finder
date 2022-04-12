@@ -43,7 +43,7 @@ const CodeFragmentsDisplay = () => {
         <div className="d-flex">
           <Button
             variant="danger"
-            onClick={(ev: any) => {
+            onClick={(ev) => {
               deleteCodeFragment(hashMessage);
             }}
           >

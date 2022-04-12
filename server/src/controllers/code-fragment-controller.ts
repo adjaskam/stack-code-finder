@@ -2,18 +2,15 @@ import { NextFunction, Request, Response } from "express";
 import {
   createCodeFragment,
   deleteAllCodeFragments,
-  findAllCodeFragmentsBySearchPhrase,
   findAllCodeFragments,
   findOneAndUpdateCodeFragment,
-  findAllCodeFragmentsByUser,
+  findPaginatedCodeFragmentsByUser,
   countAllCodeFragmentsByUser,
   deleteCodeFragment,
+  findAllCodeFragmentsByUser,
 } from "../services/code-fragment-service";
 import { fetchQuestionsFromStackAPI } from "../api";
-import CodeFragment, {
-  CodeFragmentDocument,
-  CodeFragmentEntity,
-} from "../models/code-fragment-model";
+import { CodeFragmentEntity } from "../models/code-fragment-model";
 import log from "../loggers";
 import PuppeteerScraper from "../scrapers/PuppeteerScraper";
 import config from "config";
@@ -22,16 +19,21 @@ import {
   getInternalQuestionsList,
 } from "../scrapers/questions-converter";
 import hash from "object-hash";
-import { _FetchedQuestionsList } from "./types/code-fragment-types";
+import {
+  InternalQuestion,
+  _FetchedQuestionsList,
+} from "./types/code-fragment-types";
 import { TaggedFragmentDto } from "../dtos/TaggedFragmentDto";
 import { CodeFragmentsListDto } from "../dtos/CodeFragmentsListDto";
 import ApiError from "../errors/ApiError";
 import CheerioScraper from "../scrapers/CheerioScraper";
 import { AppScraperInterface } from "../scrapers/AppScraperInterface";
+import _omit from "lodash.omit";
 
-const codeFragmentsFetchLimit = config.get("codeFragmentsFetchLimit") as number;
 const FIND_BY_HTML_ELEMENT = "code" as string;
 const SEARCH_XPATH = "//pre[contains(@class, 's-code-block')]" as string;
+
+const codeFragmentsFetchLimit = config.get("codeFragmentsFetchLimit") as number;
 
 export async function fetchCodeFragmentsHandler(
   req: Request,
@@ -40,12 +42,25 @@ export async function fetchCodeFragmentsHandler(
 ) {
   let page = 0;
   try {
-    const userId = req.user?.id;
-    if (!userId) {
-      throw ApiError.badRequest(`CANNOT_FOUND_USER_ID`);
-    }
     const start = new Date().getTime();
     let isRequestCancelledByClient = false;
+
+    const taggedFragmentDto = new TaggedFragmentDto(
+      req.body.tag,
+      req.body.searchPhrase,
+      req.body.amount
+    );
+
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      throw ApiError.badRequest(`CANNOT_FOUND_AUTHENTICATED_USER`);
+    }
+
+    if (taggedFragmentDto.getAmount() > codeFragmentsFetchLimit) {
+      throw ApiError.badRequest(
+        `LIMIT_OF_${codeFragmentsFetchLimit}_CODE_FRAGMENTS_EXCEEDED`
+      );
+    }
 
     // to handle the case when client aborted the request
     // to not generate backend overload, we check that each iteration of mapping the question
@@ -54,12 +69,6 @@ export async function fetchCodeFragmentsHandler(
       isRequestCancelledByClient = true;
     });
 
-    const taggedFragmentDto = new TaggedFragmentDto(
-      req.body.tag,
-      req.body.searchPhrase,
-      req.body.amount
-    );
-
     let scrapper: AppScraperInterface = new CheerioScraper(
       FIND_BY_HTML_ELEMENT
     );
@@ -67,23 +76,10 @@ export async function fetchCodeFragmentsHandler(
       scrapper = new PuppeteerScraper(SEARCH_XPATH);
     }
 
-    if (taggedFragmentDto.getAmount() > codeFragmentsFetchLimit) {
-      throw ApiError.badRequest(
-        `LIMIT_OF_${codeFragmentsFetchLimit}_CODE_FRAGMENTS_EXCEEDED`
-      );
-    }
     const managedCodeFragments: CodeFragmentEntity[] = [];
     do {
-      const fetchedQuestions: _FetchedQuestionsList =
-        await fetchQuestionsFromStackAPI(taggedFragmentDto.getTag(), ++page);
-
-      const mappedQuestions = getInternalQuestionsList(fetchedQuestions.items);
-      const existingCodeFragments: CodeFragmentDocument[] =
-        await CodeFragment.find();
-      const existingUser = existingCodeFragments
-        .map((x) => x.usersOwn)
-        .find((x) => x.includes(userId));
-      const existingHashes = existingCodeFragments.map((x) => x.hashMessage);
+      const [existingUser, existingHashes, mappedQuestions] =
+        await validateInitialRequestData(taggedFragmentDto, userEmail, page);
 
       if (mappedQuestions) {
         for (const item of mappedQuestions) {
@@ -122,7 +118,7 @@ export async function fetchCodeFragmentsHandler(
               if (existingHashes.includes(codeBlockHash) && !existingUser) {
                 managedCodeFragment = await findOneAndUpdateCodeFragment(
                   codeBlockHash,
-                  userId
+                  userEmail
                 );
               } else if (!existingHashes.includes(codeBlockHash)) {
                 managedCodeFragment = await createCodeFragment({
@@ -131,22 +127,23 @@ export async function fetchCodeFragmentsHandler(
                   searchPhrase: taggedFragmentDto.getSearchPhrase(),
                   codeFragment: codeBlock,
                   hashMessage: codeBlockHash,
-                  usersOwn: [userId],
+                  usersOwn: [userEmail],
                 });
               }
 
               if (managedCodeFragment) {
                 managedCodeFragments.push(managedCodeFragment);
+                log.info(`MANAGED_CODE_BLOCK_CONTENT: ${managedCodeFragment}`);
               }
-              log.info(`MANAGED_CODE_BLOCK_CONTENT: ${managedCodeFragment}`);
 
               if (
                 managedCodeFragments.length == taggedFragmentDto.getAmount()
               ) {
                 const end = new Date().getTime();
                 const time = end - start;
+
                 const codeFragmentsListDto = new CodeFragmentsListDto(
-                  managedCodeFragments,
+                  managedCodeFragments.map((item) => _omit(item, "usersOwn")),
                   managedCodeFragments.length,
                   time
                 );
@@ -179,42 +176,27 @@ export async function getAllCodeFragmentsHandler(
   }
 }
 
-export async function getAllCodeFragmentsBySearchPhraseHandler(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const codeFragments = await findAllCodeFragmentsBySearchPhrase(
-      req.params.searchPhrase
-    );
-    const codeFragmentsListDto = new CodeFragmentsListDto(
-      codeFragments,
-      codeFragments.length
-    );
-    return res.status(200).send(codeFragmentsListDto);
-  } catch (error) {
-    next(error);
-  }
-}
-
 export async function getAllCodeFragmentsForUserHandler(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const userId = req.user?.id;
+  const userEmail = req.user?.email;
   try {
     const limit: number = parseInt(req.query.limit as string);
     const page: number = parseInt(req.query.page as string);
-    if (!userId) {
-      throw ApiError.badRequest("CANNOT_FIND_USER_ID");
+    if (!userEmail) {
+      throw ApiError.badRequest("CANNOT_FIND_AUTHENTICATED_USER");
     }
 
-    const codeFragments = await findAllCodeFragmentsByUser(userId, page, limit);
-    const totalCount = await countAllCodeFragmentsByUser(userId);
+    const codeFragments = await findPaginatedCodeFragmentsByUser(
+      userEmail,
+      page,
+      limit
+    );
+    const totalCount = await countAllCodeFragmentsByUser(userEmail);
     const codeFragmentsListDto = new CodeFragmentsListDto(
-      codeFragments,
+      codeFragments.map((codeFragment) => _omit(codeFragment, "usersOwn")),
       totalCount
     );
     return res.status(200).send(codeFragmentsListDto);
@@ -228,14 +210,14 @@ export async function deleteCodeFragmentHandler(
   res: Response,
   next: NextFunction
 ) {
-  const userId = req.user?.id;
+  const userEmail = req.user?.email;
   try {
-    if (!userId) {
-      throw ApiError.badRequest("CANNOT_FIND_USER_ID");
+    if (!userEmail) {
+      throw ApiError.badRequest("CANNOT_FIND_AUTHENTICATED_USER");
     }
     const hashMessage = req.params.hashMessage;
 
-    const result = await deleteCodeFragment(userId, hashMessage);
+    const result = await deleteCodeFragment(userEmail, hashMessage);
     console.log(result);
     return res.status(200).send(result);
   } catch (error) {
@@ -255,3 +237,23 @@ export async function deleteAllCodeFragmentsHandler(
     next(error);
   }
 }
+
+const validateInitialRequestData = async (
+  taggedFragmentDto: TaggedFragmentDto,
+  userEmail: string,
+  page: number
+): Promise<[boolean, string[], InternalQuestion[] | undefined]> => {
+  const fetchedQuestions: _FetchedQuestionsList =
+    await fetchQuestionsFromStackAPI(taggedFragmentDto.getTag(), ++page);
+
+  const mappedQuestions = getInternalQuestionsList(fetchedQuestions.items);
+
+  const userCodeFragments: CodeFragmentEntity[] =
+    await findAllCodeFragmentsByUser(userEmail);
+  const existingUser = userCodeFragments.length > 0;
+
+  const allCodeFragments = await findAllCodeFragments();
+  const existingHashes = allCodeFragments.map((x) => x.hashMessage);
+
+  return [existingUser, existingHashes, mappedQuestions || undefined];
+};

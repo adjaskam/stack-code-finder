@@ -31,12 +31,11 @@ const CodeFragmentSchema = new Schema(
     },
     usersOwn: {
       type: [String],
-      required: [true, "UsersOwn is required"]
+      required: [true, "UsersOwn is required"],
     },
   },
   { timestamps: true }
 );
-// .index({ questionId: 1, userId: 1 }, { unique: true })
 
 const CodeFragment = mongoose.model<CodeFragmentDocument>(
   "CodeFragmentModel",

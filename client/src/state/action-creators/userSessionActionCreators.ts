@@ -32,7 +32,7 @@ export const loginUser = ({ email, password }: UserCredentialsInterface) => {
           payload: sessionObject,
         });
       }
-    } catch (error: any) {}
+    } catch (error) {}
   };
 };
 

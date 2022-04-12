@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import config from "config";
 import ApiError from "../errors/ApiError";
 
-const tokenSecret = config.get("tokenSecret") as string;
+const jwtTokenSecret = config.get("jwtTokenSecret") as string;
 
 export async function checkUserAuthStatus(
   req: Request,
@@ -16,8 +16,10 @@ export async function checkUserAuthStatus(
   if (!token) return res.status(403);
 
   try {
-    const { id } = (await jwt.verify(token, tokenSecret)) as { id: string };
-    req.user = { id: id };
+    const { email } = (await jwt.verify(token, jwtTokenSecret)) as {
+      email: string;
+    };
+    req.user = { email: email };
   } catch (error) {
     next(ApiError.unauthorized(error.message));
   }

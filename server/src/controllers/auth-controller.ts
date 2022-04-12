@@ -3,7 +3,7 @@ import config from "config";
 import jwt from "jsonwebtoken";
 import { createUser, loginUser } from "../services/auth-service";
 
-const tokenSecret = config.get("tokenSecret") as string;
+const jwtTokenSecret = config.get("jwtTokenSecret") as string;
 
 // check for email reuse placed at DB level
 export async function registerUserHandler(
@@ -32,7 +32,7 @@ export async function loginUserHandler(
   try {
     const user = await loginUser({ email, password });
     if (user) {
-      const accessToken = jwt.sign({ id: user.email }, tokenSecret, {
+      const accessToken = jwt.sign({ email: user.email }, jwtTokenSecret, {
         expiresIn: 3600,
       });
       return res.send(accessToken);
