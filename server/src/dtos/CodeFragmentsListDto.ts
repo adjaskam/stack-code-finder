@@ -1,4 +1,4 @@
-import { CodeFragmentEntity } from "../models/code-fragment-model";
+import { CodeFragmentEntity } from "../models/model-types";
 
 export class CodeFragmentsListDto {
   private items: CodeFragmentEntity[];

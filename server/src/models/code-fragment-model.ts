@@ -1,16 +1,6 @@
-import mongoose, { Document, Schema } from "mongoose";
-export interface CodeFragmentEntity {
-  questionId: string;
-  tag: string;
-  searchPhrase: string;
-  codeFragment: string;
-  hashMessage: string;
-  usersOwn: string[];
-}
-export interface CodeFragmentDocument extends CodeFragmentEntity, Document {
-  createdAt: Date;
-  updatedAt: Date;
-}
+import mongoose, { Schema } from "mongoose";
+
+import { CodeFragmentDocument } from "./model-types";
 
 const CodeFragmentSchema = new Schema(
   {

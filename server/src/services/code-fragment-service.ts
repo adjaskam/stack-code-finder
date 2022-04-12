@@ -1,6 +1,6 @@
-import CodeFragment, {
-  CodeFragmentEntity,
-} from "../models/code-fragment-model";
+import CodeFragment from "../models/code-fragment-model";
+import { CodeFragmentEntity } from "../models/model-types";
+
 import ApiError from "../errors/ApiError";
 import { DeleteResult } from "mongodb";
 
@@ -71,7 +71,7 @@ export async function findPaginatedCodeFragmentsByUser(
 }
 
 export async function findAllCodeFragmentsByUser(
-  userEmail: string,
+  userEmail: string
 ): Promise<CodeFragmentEntity[]> {
   try {
     return await CodeFragment.find({ usersOwn: { $in: [userEmail] } });
@@ -84,7 +84,9 @@ export async function countAllCodeFragmentsByUser(
   userEmail: string
 ): Promise<number> {
   try {
-    return await CodeFragment.countDocuments({ usersOwn: { $in: [userEmail] } });
+    return await CodeFragment.countDocuments({
+      usersOwn: { $in: [userEmail] },
+    });
   } catch (error) {
     throw ApiError.badRequest(error.message);
   }
@@ -103,7 +105,7 @@ export async function deleteCodeFragment(
     if (userRemovedUserOwnsArray?.usersOwn.length === 1) {
       return await CodeFragment.deleteOne({ hashMessage: hashMessage });
     }
-    
+
     return true;
   } catch (error) {
     throw ApiError.badRequest(error.message);

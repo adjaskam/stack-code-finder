@@ -1,5 +1,5 @@
 import { DocumentDefinition } from "mongoose";
-import CodeFragment, { CodeFragmentDocument } from "../../models/code-fragment-model";
+import CodeFragment, { CodeFragmentDocument } from "../../models/model-types";
 
 export type TaggedCodeFragment = {
   tag: string;

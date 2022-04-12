@@ -1,17 +1,7 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
 import bcrypt from "bcrypt";
 import DatabaseError from "../errors/DatabaseError";
-
-export interface UserEntity {
-  email: string;
-  password: string;
-}
-
-export interface UserDocument extends Document, UserEntity {
-  createdAt: Date;
-  updatedAt: Date;
-}
-
+import { UserDocument } from "./model-types";
 interface UserInterface extends Model<UserDocument> {
   login: (email: string, password: string) => UserDocument;
 }

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import _omit from "lodash.omit";
 import {
   createCodeFragment,
   deleteAllCodeFragments,
@@ -8,27 +9,23 @@ import {
   countAllCodeFragmentsByUser,
   deleteCodeFragment,
   findAllCodeFragmentsByUser,
-} from "../services/code-fragment-service";
-import { fetchQuestionsFromStackAPI } from "../api";
-import { CodeFragmentEntity } from "../models/code-fragment-model";
-import log from "../loggers";
-import PuppeteerScraper from "../scrapers/PuppeteerScraper";
+} from "../../services/code-fragment-service";
+import { fetchQuestionsFromStackAPI } from "../../api";
+import { CodeFragmentEntity } from "../../models/model-types";
+import log from "../../loggers";
+import PuppeteerScraper from "../../scrapers/PuppeteerScraper";
 import config from "config";
 import {
   getCodeBlocksContainsPhrase,
   getInternalQuestionsList,
-} from "../scrapers/questions-converter";
+} from "../utils/questions-converter";
 import hash from "object-hash";
-import {
-  InternalQuestion,
-  _FetchedQuestionsList,
-} from "./types/code-fragment-types";
-import { TaggedFragmentDto } from "../dtos/TaggedFragmentDto";
-import { CodeFragmentsListDto } from "../dtos/CodeFragmentsListDto";
-import ApiError from "../errors/ApiError";
-import CheerioScraper from "../scrapers/CheerioScraper";
-import { AppScraperInterface } from "../scrapers/AppScraperInterface";
-import _omit from "lodash.omit";
+import { InternalQuestion, _FetchedQuestionsList } from "./code-fragment-types";
+import { TaggedFragmentDto } from "../../dtos/TaggedFragmentDto";
+import { CodeFragmentsListDto } from "../../dtos/CodeFragmentsListDto";
+import ApiError from "../../errors/ApiError";
+import CheerioScraper from "../../scrapers/CheerioScraper";
+import { AppScraperInterface } from "../../scrapers/AppScraperInterface";
 
 const FIND_BY_HTML_ELEMENT = "code" as string;
 const SEARCH_XPATH = "//pre[contains(@class, 's-code-block')]" as string;

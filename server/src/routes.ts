@@ -11,7 +11,7 @@ import { handleApplicationError } from "./middlewares/error-handler-middleware";
 import {
   registerUserHandler,
   loginUserHandler,
-} from "./controllers/auth-controller";
+} from "./controllers/auth/auth-controller";
 import {
   credentialsValidationSchema,
   fetchCodeFragmentsValidationSchema,
