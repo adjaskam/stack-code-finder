@@ -1,17 +1,74 @@
-# stack-code-finder
-Automated scrapper using Stackoverflow API based on https://api.stackexchange.com/docs & puppeteer.  
-Search data from Stackoverflow, considering **only code snippets** in selected threads.  
+<div id="top"></div>
+<!--
+*** Thanks for checking out the Best-README-Template. If you have a suggestion
+*** that would make this better, please fork the repo and create a pull request
+*** or simply open an issue with the tag "enhancement".
+*** Don't forget to give the project a star!
+*** Thanks again! Now go create something AMAZING! :D
+-->
+
+
+
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
+
+
+
+<!-- PROJECT LOGO -->
+<h3 align="center">stack-code-finder</h3>
+
+  <p align="center">
+   Automated scrapper built with Stackoverflow API.<br />Search data in Stackoverflow - consider only code snippets in selected threads.  
+    <br />
+    ·
+    <a href="https://github.com/adjaskam/stack-code-finder/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/adjaskam/stack-code-finder/issues">Request Feature</a>
+  </p>
+</div>
+
+<div align="center">
 
 | <img width="664" alt="Zrzut ekranu 2022-03-20 o 16 43 09" src="https://user-images.githubusercontent.com/43110487/159170505-f8ac4bfa-c3b4-4296-9a4a-7f753c32a71e.png">| 
 |:--:| 
 | *The example of a code snippet* |
+</div>
 
-## Core libraries
-* [puppeteer](https://github.com/puppeteer/puppeteer) v13.5.0
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-## Entry setup
-* Set all following environmental variables
-```javascript
+
+![image](https://user-images.githubusercontent.com/43110487/162948296-e239fb88-f307-40cc-bf8e-018a0fb989f4.png)
+
+### Built With
+
+* [node.js](https://nextjs.org/)
+* [express](https://reactjs.org/)
+* [React.js](https://reactjs.org/)
+* [react-redux](https://reactjs.org/)
+* [redux-thunk](https://reactjs.org/)
+* [cheerio](https://vuejs.org/)
+* [puppeteer](https://angular.io/)
+* [Bootstrap](https://reactjs.org/)
+* [mongodb](https://reactjs.org/)
+* [docker](https://reactjs.org/)
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+### Prerequisites
+
+* Set all following environmental variables, e.g.:
+```shell
+HOST=0.0.0.0
+PORT=3000
+
 MONGO_DB_USER=root
 MONGO_DB_PASSWORD=example
 MONGO_DB_NAME=appdb
@@ -19,8 +76,25 @@ MONGO_DB_PORT=27017
 MONGO_DB_SERVICE_NAME=mongodb
 
 CODE_FRAGMENTS_FETCH_LIMIT=10
+JWT_TOKEN_SECRET=access_token_secret
+STACK_API_KEY=stack_api_key
 ```
-* Run by invoking `docker-compose up`
+You can find more information on getting the `STACK_API_KEY` by following https://api.stackexchange.com/docs/authentication.  
+**Important note** - https://api.stackexchange.com/docs/throttle
+
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/adjaskam/stack-code-finder.git
+   ```
+2. Install NPM packages for the client
+3. Start the project with `concurrently` (invoke from root directory)
+   ```sh
+   npm run dev:fullstack
+   ```
+
 
 ## Endpoints
 * POST `/api/codefragments` -
@@ -31,7 +105,8 @@ start a job for given `tag` (includes web scrapping procedure). The application 
 {
    "tag": "Java",
    "searchPhrase": "int",
-   "amount": 2
+   "amount": 2,
+   "scraperType": "cheerio"
 }
 ```
 #### Response: 
@@ -64,11 +139,15 @@ start a job for given `tag` (includes web scrapping procedure). The application 
    "amount": 2
 }
 ```
+
+* GET `/api/codefragments/my` - get all obtained code fragments per user
 * GET `/api/codefragments` - get all obtained code fragments
-* GET `/api/codefragments/:searchPhrase` - get all obtained code fragments by given `searchPhrase`
-* DELETE `/api/codefragments`- delete all code fragments
+* DELETE `/api/codefragments`- delete all code fragments 
+* POST `/api/register` - register new user
+* POST `/api/login`- service login
 
 ## TODO
+* [X] Handle user-specific documents - create authentication & owning the documents by the specific user
+* [X] Work on performance - added `cheerio` as the main scraper
 * [ ] Adjust searching for `searchPhrase` in the obtained content to be more precise (currently, the base of the search process is check if fragment includes given `searchPhrase`)
-* [ ] Handle user-specific documents
-* [ ] Work on performance
+* [ ] Work on refresh tokens
