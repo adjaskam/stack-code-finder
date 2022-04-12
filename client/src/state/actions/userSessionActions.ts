@@ -1,5 +1,5 @@
 import { UserSessionActionType as ActionType } from "../action-types/userSessionActionTypes";
-import { UserSessionStateInterface } from "../reducers/types/reducers";
+import { UserSessionStateInterface } from "../reducers/reducers";
 interface LoginAction {
   type: ActionType.LOGIN;
   payload: UserSessionStateInterface;

@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { UserSessionStateInterface } from "../state/reducers/types/reducers";
+import { UserSessionStateInterface } from "../state/reducers/reducers";
 import { NotificationManager } from "react-notifications";
 
 axios.interceptors.request.use(

@@ -6,7 +6,7 @@ export interface CodeFragmentEntity {
   searchPhrase: string;
   codeFragment: string;
   hashMessage: string;
-  usersOwn: string[];
+  usersOwn?: string[];
 }
 export interface CodeFragmentDocument extends CodeFragmentEntity, Document {
   createdAt: Date;

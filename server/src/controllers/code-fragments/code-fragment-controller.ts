@@ -55,7 +55,7 @@ export async function fetchCodeFragmentsHandler(
 
     if (taggedFragmentDto.getAmount() > codeFragmentsFetchLimit) {
       throw ApiError.badRequest(
-        `LIMIT_OF_${codeFragmentsFetchLimit}_CODE_FRAGMENTS_EXCEEDED`
+        `LIMIT_OF_${codeFragmentsFetchLimit}_CODE_FRAGMENTS_EXCEEDED: ${taggedFragmentDto.getAmount()}`
       );
     }
 
@@ -76,7 +76,7 @@ export async function fetchCodeFragmentsHandler(
     const managedCodeFragments: CodeFragmentEntity[] = [];
     do {
       const [existingUser, existingHashes, mappedQuestions] =
-        await validateInitialRequestData(taggedFragmentDto, userEmail, page);
+        await validateInitialRequestData(taggedFragmentDto, userEmail, ++page);
 
       if (mappedQuestions) {
         for (const item of mappedQuestions) {
@@ -140,7 +140,7 @@ export async function fetchCodeFragmentsHandler(
                 const time = end - start;
 
                 const codeFragmentsListDto = new CodeFragmentsListDto(
-                  managedCodeFragments.map((item) => _omit(item, "usersOwn")),
+                  managedCodeFragments.map((item) => _omit(item, ["usersOwn"])),
                   managedCodeFragments.length,
                   time
                 );
@@ -193,7 +193,7 @@ export async function getAllCodeFragmentsForUserHandler(
     );
     const totalCount = await countAllCodeFragmentsByUser(userEmail);
     const codeFragmentsListDto = new CodeFragmentsListDto(
-      codeFragments.map((codeFragment) => _omit(codeFragment, "usersOwn")),
+      codeFragments.map((codeFragment) => _omit(codeFragment, ["usersOwn"])),
       totalCount
     );
     return res.status(200).send(codeFragmentsListDto);
@@ -241,7 +241,7 @@ const validateInitialRequestData = async (
   page: number
 ): Promise<[boolean, string[], InternalQuestion[] | undefined]> => {
   const fetchedQuestions: _FetchedQuestionsList =
-    await fetchQuestionsFromStackAPI(taggedFragmentDto.getTag(), ++page);
+    await fetchQuestionsFromStackAPI(taggedFragmentDto.getTag(), page);
 
   const mappedQuestions = getInternalQuestionsList(fetchedQuestions.items);
 

@@ -1,6 +1,6 @@
 import { CodeFragmentsAction } from "../actions/codeFragmentsActions";
 import { CodeFragmentsActionType as ActionType } from "../action-types/codeFragmentsActionTypes";
-import { CodeFragmentState } from "./types/reducers";
+import { CodeFragmentState } from "./reducers";
 
 const initialState: CodeFragmentState = {
   searchPhrase: "",

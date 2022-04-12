@@ -1,9 +1,9 @@
-import AppRoutes from "./routes/AppRoutes";
-import Header from "./shared/Header";
+import AppRoutes from "./components/routes/AppRoutes";
+import Header from "./components/shared/Header";
 import { Container } from "react-bootstrap";
 import { NotificationContainer } from "react-notifications";
 
-const App = () => {
+const AppContainer = () => {
   return (
     <Container fluid className="bg-light vh-100">
       <Header />
@@ -13,4 +13,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default AppContainer;

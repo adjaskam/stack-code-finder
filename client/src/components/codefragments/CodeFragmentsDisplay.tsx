@@ -41,16 +41,17 @@ const CodeFragmentsDisplay = () => {
           {questionId}
         </a>
         <div className="d-flex">
+          <Button onClick={decoratedOnClick} variant="secondary">
+            <i className="bi bi-arrows-expand"></i>
+          </Button>
           <Button
-            variant="danger"
+            variant="secondary"
+            className="ms-2"
             onClick={(ev) => {
               deleteCodeFragment(hashMessage);
             }}
           >
-            Delete
-          </Button>
-          <Button onClick={decoratedOnClick} className="ms-2">
-            Show
+            <i className="bi bi-trash"></i>
           </Button>
         </div>
       </div>

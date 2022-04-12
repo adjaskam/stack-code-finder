@@ -9,7 +9,7 @@ import jwtDecode from "jwt-decode";
 import {
   UserSessionStateInterface,
   JwtDecodedInterface,
-} from "../reducers/types/reducers";
+} from "../reducers/reducers";
 
 export const loginUser = ({ email, password }: UserCredentialsInterface) => {
   return async (dispatch: Dispatch<Action>) => {

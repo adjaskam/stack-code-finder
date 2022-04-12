@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
     credentials: true,
-    origin: `http://${host}:${port}`,
+    origin: `http://localhost:${port}`,
   })
 );
 

@@ -1,6 +1,6 @@
 import { UserSessionAction } from "../actions/userSessionActions";
 import { UserSessionActionType as ActionType } from "../action-types/userSessionActionTypes";
-import { UserSessionStateInterface } from "./types/reducers";
+import { UserSessionStateInterface } from "./reducers";
 
 const getJwtToken = () => {
   const sessionString = localStorage.getItem("session");

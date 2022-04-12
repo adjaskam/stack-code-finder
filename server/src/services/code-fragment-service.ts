@@ -102,7 +102,7 @@ export async function deleteCodeFragment(
       { $pull: { usersOwn: userEmail } }
     );
 
-    if (userRemovedUserOwnsArray?.usersOwn.length === 1) {
+    if (userRemovedUserOwnsArray?.usersOwn?.length === 1) {
       return await CodeFragment.deleteOne({ hashMessage: hashMessage });
     }
 

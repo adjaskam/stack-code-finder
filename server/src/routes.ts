@@ -1,11 +1,10 @@
 import { Express } from "express";
 import {
   fetchCodeFragmentsHandler,
-  getAllCodeFragmentsHandler,
   deleteAllCodeFragmentsHandler,
   getAllCodeFragmentsForUserHandler,
   deleteCodeFragmentHandler,
-} from "./controllers/code-fragment-controller";
+} from "./controllers/code-fragments/code-fragment-controller";
 
 import { handleApplicationError } from "./middlewares/error-handler-middleware";
 import {
