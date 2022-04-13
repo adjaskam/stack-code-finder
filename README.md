@@ -24,7 +24,7 @@
 <h1 align="center">stack-code-finder</h1>
 
   <p align="center">
-   Automated scraper built on top of Stack Exchange API.<br />Search code fragments by given phrase in Stackoverflow - consider only code snippets in selected threads.  
+   Automated scraper built on top of Stack Exchange API.<br />Search code fragments by given phrase in Stack Overflow - consider only code snippets in selected threads.  
     <br />
     <a href="https://github.com/adjaskam/stack-code-finder/issues">Report Bug</a>
   </p>
@@ -82,7 +82,7 @@ You can find more information on getting the `STACK_API_KEY` by following &#8594
 Important note &#8594; https://api.stackexchange.com/docs/throttle
 
 
-### Installation
+### Dev installation
 
 1. Clone the repo
    ```sh
