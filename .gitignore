@@ -45,3 +45,4 @@ yarn.lock
 node_modules
 bower_components
 build
+*.rest

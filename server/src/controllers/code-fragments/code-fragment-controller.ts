@@ -140,7 +140,7 @@ export async function fetchCodeFragmentsHandler(
                 const time = end - start;
 
                 const codeFragmentsListDto = new CodeFragmentsListDto(
-                  managedCodeFragments.map((item) => _omit(item, ["usersOwn"])),
+                  managedCodeFragments.map((item) => _omit(item, "usersOwn")),
                   managedCodeFragments.length,
                   time
                 );
@@ -193,7 +193,7 @@ export async function getAllCodeFragmentsForUserHandler(
     );
     const totalCount = await countAllCodeFragmentsByUser(userEmail);
     const codeFragmentsListDto = new CodeFragmentsListDto(
-      codeFragments.map((codeFragment) => _omit(codeFragment, ["usersOwn"])),
+      codeFragments.map((codeFragment) => _omit(codeFragment, "usersOwn")),
       totalCount
     );
     return res.status(200).send(codeFragmentsListDto);

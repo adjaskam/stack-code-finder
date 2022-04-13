@@ -59,6 +59,6 @@ export default function (app: Express) {
   );
   // currently disabled
   // app.get("/api/codefragments", getAllCodeFragmentsHandler);
-  app.delete("/api/codefragments", deleteAllCodeFragmentsHandler);
+  // app.delete("/api/codefragments", deleteAllCodeFragmentsHandler);
   app.use(handleApplicationError);
 }
