@@ -21,15 +21,12 @@
 
 
 <!-- PROJECT LOGO -->
-<h3 align="center">stack-code-finder</h3>
+<h1 align="center">stack-code-finder</h1>
 
   <p align="center">
-   Automated scrapper built with Stackoverflow API.<br />Search code fragments by given phrase in Stackoverflow - consider only code snippets in selected threads.  
+   Automated scraper built on top of Stack Exchange API.<br />Search code fragments by given phrase in Stackoverflow - consider only code snippets in selected threads.  
     <br />
-    ·
     <a href="https://github.com/adjaskam/stack-code-finder/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/adjaskam/stack-code-finder/issues">Request Feature</a>
   </p>
 </div>
 
@@ -41,23 +38,24 @@
 </div>
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About the project
 
 
 ![image](https://user-images.githubusercontent.com/43110487/162948296-e239fb88-f307-40cc-bf8e-018a0fb989f4.png)
 
 ### Built With
 
-* [node.js](https://nextjs.org/)
-* [express](https://reactjs.org/)
+* [Node.js](https://nodejs.org/en/)
+* [Express](https://expressjs.com/)
 * [React.js](https://reactjs.org/)
-* [react-redux](https://reactjs.org/)
-* [redux-thunk](https://reactjs.org/)
-* [cheerio](https://vuejs.org/)
-* [puppeteer](https://angular.io/)
-* [Bootstrap](https://reactjs.org/)
-* [mongodb](https://reactjs.org/)
-* [docker](https://reactjs.org/)
+* [React Redux](https://react-redux.js.org/)
+* [Redux Thunk](https://github.com/reduxjs/redux-thunk)
+* [Mongoose](https://mongoosejs.com/)
+* [React Bootstrap](https://react-bootstrap.github.io/)
+* [Docker](https://www.docker.com/) 
+* Scraping with:
+  * [Cheerio](https://cheerio.js.org/)
+  * [Puppeteer](https://pptr.dev/)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -79,8 +77,9 @@ CODE_FRAGMENTS_FETCH_LIMIT=10
 JWT_TOKEN_SECRET=access_token_secret
 STACK_API_KEY=stack_api_key
 ```
-You can find more information on getting the `STACK_API_KEY` by following https://api.stackexchange.com/docs/authentication.  
-**Important note** - https://api.stackexchange.com/docs/throttle
+You can find more information on getting the `STACK_API_KEY` by following &#8594; https://api.stackexchange.com/docs/authentication.
+
+Important note &#8594; https://api.stackexchange.com/docs/throttle
 
 
 ### Installation
@@ -102,52 +101,50 @@ You can find more information on getting the `STACK_API_KEY` by following https:
 
 
 ## Endpoints
-* POST `/api/codefragments` -
-start a job for given `tag` (includes web scrapping procedure). The application supports the creation of duplicate extracted fragments by comparing values of MD5 hash and handling user-specific documents (that means owning the fragment by multiple users - prevent creating duplicates).
+* POST `/api/codefragments` - start a job for given `tag` (includes scraping procedure). The application supports:
+  * Preventing creation of duplicates extracted fragments (comparing values of MD5 hash from code fragment factors).
+  * Handling user-specific documents - that means owning the single code fragment by multiple users.
+  * Web scraping optionally with Puppeteer or Cheerio.
 
 #### Body of the example request: 
 ```json
 {
    "tag": "Java",
    "searchPhrase": "int",
-   "amount": 2,
+   "amount": 1,
    "scraperType": "cheerio"
 }
 ```
 #### Response: 
 ```json
 {
-   "items": [
+   "items":[
       {
-         "_id": "6237430ad0ac68254e073113",
-         "questionId": "71547666",
+         "questionId": "71860220",
          "tag": "Java",
          "searchPhrase": "int",
-         "codeFragment": "import java.util.Scanner;\nimport java.time.LocalDateTime;\nimport java.time.format.DateTimeFormatter; \n\nclass Main {\n  public static void main(String[] args) {\n    Scanner myObj = new Scanner(System.in);\n\n    System.out.println(\"Enter your Name, Student ID and Salary: \\n\");\n\n",
-         "hashMessage": "ce855c81eb26302839af575b7a238796",
-         "createdAt": "2022-03-20T15:06:50.872Z",
-         "updatedAt": "2022-03-20T15:06:50.872Z",
-         "__v": 0
-      },
-      {
-         "_id": "6237430ad0ac68254e073115",
-         "questionId": "71547666",
-         "tag": "Java",
-         "searchPhrase": "int",
-         "codeFragment": "if(50<=salary) {    \n    if(70<=salary) {\n         System.out.printIn(\"E\");\n         }\n    else {\n         System.out.println(\"C\");\n         }\n}\n",
-         "hashMessage": "2296273c33507991656cca6462008795",
-         "createdAt": "2022-03-20T15:06:50.887Z",
-         "updatedAt": "2022-03-20T15:06:50.887Z",
+         "codeFragment": "public class TekuciRacun implements IRacun{\n private String vlasnik;\n private int isplate;\n private int kredit;\nthis.stanje = stanje;\n    }\n    \n    \n    \n}\n",
+         "hashMessage": "2de6aac5afba3f6f44aa7f9e91cb9d8d",
+         "usersOwn": [
+            "example3@example.com"
+         ],
+         "_id": "625712efea1e61ff34001739",
+         "createdAt": "2022-04-13T18:14:07.563Z",
+         "updatedAt": "2022-04-13T18:14:07.563Z",
          "__v": 0
       }
    ],
-   "amount": 2
+   "amount": 1,
+   "executionTime": 960
 }
 ```
 
 * GET `/api/codefragments/my` - get all obtained code fragments per user
-* GET `/api/codefragments` - get all obtained code fragments
-* DELETE `/api/codefragments`- delete all code fragments
+
+* DELETE `/api/codefragments/:hashMessage`- delete code fragment by MD5 hash
+  * Available for authenticated user.
+  * Soft delete is being proceeded until the last user owns the specific code fragment.
+  * `usersOwn` array of given code fragment is empty? -> hard delete item.
 
 Authentication is needed to handle user-specific documents and is based on JWT standard.
 No confirmation needed while registering. Email has to be unique. All forms available in the application are being validated.
